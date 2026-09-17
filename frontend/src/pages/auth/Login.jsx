@@ -63,7 +63,7 @@ export const Login = () => {
     {
       role: 'student',
       title: 'Student Portal',
-      user: 'Aarav Sharma',
+      user: 'Brijesh',
       desc: 'Gate passes, Leave, AI complaints & Mess',
       icon: GraduationCap,
       color: 'bg-emerald-50/80 hover:bg-emerald-100/70 border-emerald-200 text-emerald-800',
@@ -72,7 +72,7 @@ export const Login = () => {
     {
       role: 'warden',
       title: 'Warden Portal',
-      user: 'Dr. Ramesh Patel',
+      user: 'Brijsh Maurya',
       desc: 'Approvals, Roll-call & WhatsApp alerts',
       icon: UserCheck,
       color: 'bg-indigo-50/80 hover:bg-indigo-100/70 border-indigo-200 text-indigo-800',
