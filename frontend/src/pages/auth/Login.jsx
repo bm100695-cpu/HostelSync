@@ -90,7 +90,7 @@ export const Login = () => {
     {
       role: 'staff',
       title: 'Security / Staff',
-      user: 'Vikram Singh (Guard)',
+      user: 'Vikram  (Guard)',
       desc: 'Camera QR Code Pass Scanner & Logs',
       icon: ScanLine,
       color: 'bg-amber-50/80 hover:bg-amber-100/70 border-amber-200 text-amber-800',
