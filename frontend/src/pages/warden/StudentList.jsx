@@ -55,10 +55,10 @@ export const WardenStudentList = () => {
             onChange={(e) => setBlockFilter(e.target.value)}
             className="bg-gray-900 text-white px-3 py-2 rounded-xl text-xs border border-gray-700"
           >
-            <option value="ALL">All Blocks</option>
-            <option value="Block-B">Block-B (Boys)</option>
-            <option value="Block-G">Block-G (Girls)</option>
-            <option value="Block-A">Block-A (Boys)</option>
+            <option value="ALL">All </option>
+            <option value="Block-B">Block-B (BH-1)</option>
+            <option value="Block-G">Block-G (BH-2)</option>
+            <option value="Block-A">Block-A (BH-3)</option>
           </select>
         </div>
       </div>
@@ -71,7 +71,7 @@ export const WardenStudentList = () => {
               <tr>
                 <th className="py-4 px-6">Student</th>
                 <th className="py-4 px-6">Roll No</th>
-                <th className="py-4 px-6">Room & Block</th>
+                <th className="py-4 px-6">Room & Floor</th>
                 <th className="py-4 px-6">Branch & Year</th>
                 <th className="py-4 px-6">Student Phone</th>
                 <th className="py-4 px-6">Parent Contact</th>
@@ -182,14 +182,14 @@ export const WardenStudentList = () => {
                 <span className="text-gray-400">Parent Phone:</span>
                 <a href={`tel:${selectedStudent.parentPhone}`} className="text-emerald-400 font-mono font-bold hover:underline flex items-center gap-1">
                   <Phone className="w-3 h-3" />
-                  <span>{selectedStudent.parentPhone || '+91 98765 00001'}</span>
+                  <span>{selectedStudent.parentPhone || '+91 7905607956'}</span>
                 </a>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-gray-400">Student Phone:</span>
                 <a href={`tel:${selectedStudent.phone}`} className="text-brand-400 font-mono font-bold hover:underline flex items-center gap-1">
                   <Phone className="w-3 h-3" />
-                  <span>{selectedStudent.phone || '+91 98765 43210'}</span>
+                  <span>{selectedStudent.phone || '+91 7905607956'}</span>
                 </a>
               </div>
             </div>
