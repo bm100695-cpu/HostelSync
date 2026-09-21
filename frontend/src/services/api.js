@@ -1,4 +1,5 @@
-const API_BASE = '/api';
+const API_BASE = 'https://hostel-sync-sckq.vercel.app/api';
+//const API_BASE = '/api';
 
 export const api = {
   // Generic fetch wrapper with automatic JWT token attachment
