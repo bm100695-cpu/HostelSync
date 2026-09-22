@@ -110,68 +110,68 @@ export const StudentLeave = () => {
       {/* Apply Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-lg glass-card bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-gray-800 pb-4">
-              <h3 className="text-lg font-bold text-white">Apply for Multi-Day Leave</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white">✕</button>
+          <div className="w-full max-w-lg glass-card bg-white border border-gray-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <h3 className="text-lg font-bold text-slate-900">Apply for Multi-Day Leave</h3>
+            <button onClick={() => setShowModal(false)} className="text-slate-500 hover:text-slate-900">✕</button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-300 font-semibold mb-1">From Date</label>
+                 <label className="block text-slate-700 font-semibold mb-1">From Date</label>
                   <input
                     type="date"
                     required
                     value={formData.fromDate}
                     onChange={(e) => setFormData({ ...formData, fromDate: e.target.value })}
-                    className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700"
+                    className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-300 font-semibold mb-1">To Date</label>
+                 <label className="block text-slate-700 font-semibold mb-1">To Date</label>
                   <input
                     type="date"
                     required
                     value={formData.toDate}
                     onChange={(e) => setFormData({ ...formData, toDate: e.target.value })}
-                    className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700"
+                    className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Travel Destination / Address</label>
+                <label className="block text-slate-700 font-semibold mb-1">Travel Destination / Address</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., Hometown (Jaipur), Relative Residence (Delhi)"
                   value={formData.destination}
                   onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                  className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700"
+                  className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Reason for Leave</label>
+               <label className="block text-slate-700 font-semibold mb-1">Reason for Leave</label>
                 <textarea
                   required
                   rows={2}
                   placeholder="Describe festival, family event, medical, or holiday reason..."
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                  className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700"
+                  className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Parent / Emergency Contact Phone</label>
+               <label className="block text-slate-700 font-semibold mb-1">Parent / Emergency Contact Phone</label>
                 <input
                   type="tel"
                   placeholder="+91 98765 00001"
                   value={formData.emergencyContact}
                   onChange={(e) => setFormData({ ...formData, emergencyContact: e.target.value })}
-                  className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700"
+                 className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
 
