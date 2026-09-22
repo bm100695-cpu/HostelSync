@@ -176,16 +176,21 @@ export const StudentGatePass = () => {
       {/* Apply Gate Pass Modal */}
       {showApplyModal && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-lg glass-card bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
+          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-5">
             <div className="flex items-center justify-between border-b border-gray-800 pb-4">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-brand-600/20 text-brand-400 flex items-center justify-center border border-brand-500/30">
                   <QrCode className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white">Apply for Gate Pass</h3>
-                  <p className="text-xs text-gray-400">Instant parent notification upon warden approval</p>
-                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                Apply for Gate Pass
+               </h3>
+
+               <p className="text-xs text-slate-500 mt-1">
+              Instant parent notification upon warden approval
+             </p>
+            </div>
               </div>
               <button
                 onClick={() => setShowApplyModal(false)}
@@ -197,17 +202,22 @@ export const StudentGatePass = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Pass Category</label>
+               <p className="text-xs text-gray-400">
+  Instant parent notification upon warden approval
+</p>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700 focus:outline-none focus:border-brand-500"
+                 className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 >
                   <option value="Local Outing">Local Outing (City / Mall / Books)</option>
                   <option value="Market Visit">Market Visit / Essentials (1-2 Hours)</option>
                   <option value="Weekend Outing">Weekend Outing (Day Trip)</option>
                   <option value="Medical Emergency">Medical Emergency / Clinic</option>
                   <option value="Academic Project">Academic / Hackathon Event</option>
+                  <option value="Other">
+                 Other
+                </option>
                 </select>
               </div>
 
@@ -219,7 +229,7 @@ export const StudentGatePass = () => {
                   placeholder="e.g., Central Library, Phoenix Mall, Apollo Clinic"
                   value={formData.destination}
                   onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                  className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700 focus:outline-none focus:border-brand-500"
+                 className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
 
@@ -231,7 +241,7 @@ export const StudentGatePass = () => {
                   placeholder="Briefly state the reason for leaving campus..."
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                  className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700 focus:outline-none focus:border-brand-500"
+                  className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 />
               </div>
 
@@ -243,7 +253,7 @@ export const StudentGatePass = () => {
                     required
                     value={formData.outTime}
                     onChange={(e) => setFormData({ ...formData, outTime: e.target.value })}
-                    className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700 focus:outline-none focus:border-brand-500"
+                   className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                   />
                 </div>
                 <div>
@@ -253,7 +263,7 @@ export const StudentGatePass = () => {
                     required
                     value={formData.expectedInTime}
                     onChange={(e) => setFormData({ ...formData, expectedInTime: e.target.value })}
-                    className="w-full bg-gray-800 text-white px-3.5 py-2.5 rounded-xl border border-gray-700 focus:outline-none focus:border-brand-500"
+                    className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                   />
                 </div>
               </div>
