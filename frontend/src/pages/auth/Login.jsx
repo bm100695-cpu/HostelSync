@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { 
   Shield, 
@@ -211,6 +211,15 @@ export const Login = () => {
             >
               {submitting ? 'Authenticating...' : 'Sign In to Portal'}
             </button>
+            <p className="text-center text-gray-500 mt-6">
+              Don't have an account?{' '}
+              <Link
+                 to="/student-registration"
+                 className="text-emerald-600 font-semibold hover:underline"
+                 >
+                Create Account
+              </Link>
+            </p>
           </form>
 
           <div className="mt-6 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">

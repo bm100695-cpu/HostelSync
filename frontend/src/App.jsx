@@ -1,4 +1,5 @@
 import React from 'react';
+import { StudentRegistration } from "./pages/auth/StudentRegistration";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DashboardLayout } from './layouts/DashboardLayout';
@@ -56,7 +57,11 @@ export default function App() {
         <Routes>
           {/* Public Authentication Route */}
           <Route path="/login" element={<Login />} />
-
+           {/* Student Registration */}
+            <Route
+            path="/student-registration"
+            element={<StudentRegistration />}
+         />
           {/* Root Redirect based on logged in role */}
           <Route path="/" element={<RoleBasedRedirect />} />
 

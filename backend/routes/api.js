@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -8,34 +10,271 @@ const { analyzeComplaintWithGemini, askHostelAI } = require('../services/geminiS
 const { sendWhatsAppNotification } = require('../services/whatsappService');
 
 // ================= AUTH ROUTES =================
-router.post('/auth/login', (req, res) => {
-  const { email, password } = req.body;
-  const user = mockStore.users.find(u => u.email.toLowerCase() === email?.toLowerCase());
-  
-  if (!user) {
-    return res.status(401).json({ success: false, message: 'Invalid email or password' });
-  }
 
-  // Generate JWT Token
-  const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-  
-  const { passwordHash, ...userWithoutPass } = user;
-  res.json({
-    success: true,
-    token,
-    user: userWithoutPass
-  });
+
+// STUDENT REGISTRATION
+router.post('/auth/register', async (req, res) => {
+  try {
+    const {
+      name,
+      rollNo,
+      email,
+      phone,
+      branch,
+      year,
+      block,
+      room,
+      parentName,
+      parentPhone,
+      password
+    } = req.body;
+
+    // Required fields
+    if (
+      !name ||
+      !rollNo ||
+      !email ||
+      !phone ||
+      !branch ||
+      !year ||
+      !parentName ||
+      !parentPhone ||
+      !password
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please fill all required fields'
+      });
+    }
+
+    // Password validation
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters'
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedRollNo = rollNo.trim().toUpperCase();
+
+    // Check duplicate email
+    const existingEmail = await User.findOne({
+      email: normalizedEmail
+    });
+
+    if (existingEmail) {
+      return res.status(409).json({
+        success: false,
+        message: 'Email already registered'
+      });
+    }
+
+    // Check duplicate roll number
+    const existingRollNo = await User.findOne({
+      rollNo: normalizedRollNo
+    });
+
+    if (existingRollNo) {
+      return res.status(409).json({
+        success: false,
+        message: 'Roll number already registered'
+      });
+    }
+
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    // Create student
+    const user = await User.create({
+      name: name.trim(),
+      rollNo: normalizedRollNo,
+      email: normalizedEmail,
+      phone: phone.trim(),
+      branch: branch.trim(),
+      year: year.trim(),
+      block: block?.trim() || '',
+      room: room?.trim() || '',
+      parentName: parentName.trim(),
+      parentPhone: parentPhone.trim(),
+      passwordHash,
+      role: 'student',
+      avatar: ''
+    });
+
+    // JWT
+    const token = jwt.sign(
+      {
+        id: user._id.toString(),
+        email: user.email,
+        role: user.role
+      },
+      JWT_SECRET,
+      {
+        expiresIn: '7d'
+      }
+    );
+
+    // Password remove karke response
+    const userResponse = {
+      id: user._id.toString(),
+      name: user.name,
+      rollNo: user.rollNo,
+      email: user.email,
+      phone: user.phone,
+      branch: user.branch,
+      year: user.year,
+      block: user.block,
+      room: user.room,
+      parentName: user.parentName,
+      parentPhone: user.parentPhone,
+      role: user.role,
+      avatar: user.avatar,
+      createdAt: user.createdAt
+    };
+
+    res.status(201).json({
+      success: true,
+      message: 'Student registration successful',
+      token,
+      user: userResponse
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+
+    // MongoDB duplicate key error
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'Email or Roll Number already exists'
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Registration failed'
+    });
+  }
 });
 
+
+// LOGIN
+router.post('/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required'
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // MongoDB user
+    const user = await User.findOne({
+      email: normalizedEmail
+    }).select('+passwordHash');
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.passwordHash
+    );
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // JWT
+    const token = jwt.sign(
+      {
+        id: user._id.toString(),
+        email: user.email,
+        role: user.role
+      },
+      JWT_SECRET,
+      {
+        expiresIn: '7d'
+      }
+    );
+
+    const userResponse = {
+      id: user._id.toString(),
+      name: user.name,
+      rollNo: user.rollNo,
+      email: user.email,
+      phone: user.phone,
+      branch: user.branch,
+      year: user.year,
+      block: user.block,
+      room: user.room,
+      parentName: user.parentName,
+      parentPhone: user.parentPhone,
+      role: user.role,
+      avatar: user.avatar,
+      createdAt: user.createdAt
+    };
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user: userResponse
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Login failed'
+    });
+  }
+});
+
+
+// QUICK LOGIN
 router.post('/auth/quick-login', (req, res) => {
   const { role } = req.body;
-  const user = mockStore.users.find(u => u.role === role);
+
+  const user = mockStore.users.find(
+    u => u.role === role
+  );
+
   if (!user) {
-    return res.status(404).json({ success: false, message: `No demo user found for role ${role}` });
+    return res.status(404).json({
+      success: false,
+      message: `No demo user found for role ${role}`
+    });
   }
 
-  const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    },
+    JWT_SECRET,
+    {
+      expiresIn: '7d'
+    }
+  );
+
   const { passwordHash, ...userWithoutPass } = user;
+
   res.json({
     success: true,
     token,
@@ -43,9 +282,31 @@ router.post('/auth/quick-login', (req, res) => {
   });
 });
 
-router.get('/auth/me', protect, (req, res) => {
-  const { passwordHash, ...userWithoutPass } = req.user;
-  res.json({ success: true, user: userWithoutPass });
+
+// CURRENT USER
+router.get('/auth/me', protect, async (req, res) => {
+  try {
+    // MongoDB user already loaded by middleware
+    const user = req.user;
+
+    const {
+      passwordHash,
+      ...userWithoutPass
+    } = user.toObject ? user.toObject() : user;
+
+    res.json({
+      success: true,
+      user: userWithoutPass
+    });
+
+  } catch (error) {
+    console.error('Auth me error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Unable to fetch current user'
+    });
+  }
 });
 
 // ================= GATE PASS ROUTES =================

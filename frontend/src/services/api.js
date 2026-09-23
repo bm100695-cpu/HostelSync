@@ -1,5 +1,4 @@
-const API_BASE = 'https://hostel-sync-sckq.vercel.app/api';
-//const API_BASE = '/api';
+const API_BASE = 'http://localhost:5000/api';
 
 export const api = {
   // Generic fetch wrapper with automatic JWT token attachment
@@ -26,7 +25,12 @@ export const api = {
       throw error;
     }
   },
-
+registerStudent(studentData) {
+  return this.request('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(studentData),
+  });
+},
   // Auth APIs
   login(email, password) {
     return this.request('/auth/login', {
