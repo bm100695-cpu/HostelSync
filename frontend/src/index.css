@@ -48,7 +48,7 @@ input[type="time"],
 input[type="datetime-local"],
 select,
 textarea {
-  background-color: #F8FAFC;
+  background-color: #c9e8a4;
   color: #0F172A;
   border-color: #E2E8F0;
 }

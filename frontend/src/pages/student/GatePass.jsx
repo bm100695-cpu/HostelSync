@@ -66,12 +66,12 @@ export const StudentGatePass = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-slate-50 min-h-screen p-2">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Digital Gate Passes</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900">Digital Gate Passes</h1>
+          <p className="text-sm text-slate-500 mt-1">
             Apply for hostel outing passes, check status, and scan QR code at Main Gate.
           </p>
         </div>
@@ -92,13 +92,13 @@ export const StudentGatePass = () => {
           return (
             <div
               key={pass.id}
-              className={`glass-card p-5 rounded-3xl border transition flex flex-col justify-between ${
-                isApproved
-                  ? 'border-emerald-500/40 hover:border-emerald-400 bg-gradient-to-b from-emerald-950/20 via-gray-900 to-gray-900'
-                  : pass.status === 'PENDING'
-                  ? 'border-amber-500/30 bg-gray-900'
-                  : 'border-gray-800 bg-gray-900'
-              }`}
+              className={`glass-card p-5 rounded-3xl border bg-white shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between ${
+              isApproved
+                ? 'border-emerald-200 hover:border-emerald-400'
+                : pass.status === 'PENDING'
+                ? 'border-amber-200'
+                : 'border-slate-200'
+            }`}
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -113,7 +113,7 @@ export const StudentGatePass = () => {
                         ? 'bg-gray-700/50 text-gray-300 border-gray-600'
                         : pass.status === 'REJECTED'
                         ? 'bg-rose-500/20 text-rose-400 border-rose-500/30'
-                        : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                        : 'bg-amber-500/20 text-amber-600 border-amber-500/30'
                     }`}
                   >
                     {pass.status}
@@ -121,15 +121,15 @@ export const StudentGatePass = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-white">{pass.type}</h3>
-                  <p className="text-xs text-brand-300 font-medium mt-0.5">{pass.destination}</p>
-                  <p className="text-xs text-gray-400 mt-1 line-clamp-2">{pass.reason}</p>
+                  <h3 className="text-base font-bold text-slate-900">{pass.type}</h3>
+                  <p className="text-xs text-emerald-600 font-semibold mt-0.5">{pass.destination}</p>
+                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">{pass.reason}</p>
                 </div>
 
-                <div className="p-3 rounded-2xl bg-gray-800/50 border border-gray-700/40 text-xs space-y-1.5">
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Out Time:</span>
-                    <span className="text-gray-200">
+                    <span className="text-slate-500">Out Time:</span>
+                    <span className="text-slate-800 font-medium">
                       {pass.outTime ? new Date(pass.outTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'ASAP'}
                     </span>
                   </div>
@@ -142,13 +142,13 @@ export const StudentGatePass = () => {
                 </div>
 
                 {pass.wardenRemark && (
-                  <p className="text-[11px] text-gray-400 italic bg-gray-800/30 p-2 rounded-lg">
+                  <p className="text-[11px] text-slate-600 italic bg-emerald-50 border border-emerald-100 p-3 rounded-xl">
                     Warden: "{pass.wardenRemark}"
                   </p>
                 )}
               </div>
 
-              <div className="mt-5 pt-3 border-t border-gray-800">
+              <div className="mt-5 pt-4 border-t border-slate-100">
                 {isApproved ? (
                   <button
                     onClick={() => setSelectedPass(pass)}
@@ -163,7 +163,7 @@ export const StudentGatePass = () => {
                     <span>Awaiting Warden Approval</span>
                   </div>
                 ) : (
-                  <div className="text-center text-xs text-gray-400 py-2">
+                  <div className="text-center text-xs text-emerald-600 font-semibold py-2">
                     Pass Completed
                   </div>
                 )}
@@ -211,7 +211,7 @@ export const StudentGatePass = () => {
                  className="w-full bg-slate-50 text-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                 >
                   <option value="Local Outing">Local Outing (City / Mall / Books)</option>
-                  <option value="Market Visit">Market Visit / Essentials (1-2 Hours)</option>
+                  <option value="Market ">Market  / Essentials (1-2 Hours)</option>
                   <option value="Weekend Outing">Weekend Outing (Day Trip)</option>
                   <option value="Medical Emergency">Medical Emergency / Clinic</option>
                   <option value="Academic Project">Academic / Hackathon Event</option>

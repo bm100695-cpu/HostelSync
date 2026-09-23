@@ -34,7 +34,7 @@ export const StudentProfile = () => {
           <div className="glass-card p-6 md:p-8 rounded-3xl border border-gray-800 space-y-6">
             <div className="flex items-center gap-4 pb-4 border-b border-gray-800">
               <img
-                src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
+                src={user?.Brijesh || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'}
                 alt={user?.name}
                 className="w-16 h-16 rounded-2xl object-cover ring-2 ring-brand-500/40"
               />
@@ -80,7 +80,7 @@ export const StudentProfile = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="p-3 rounded-xl bg-gray-800/30 border border-gray-700/40">
                   <span className="text-gray-400 text-[11px] block">Student Phone</span>
-                  <span className="text-gray-200 font-medium">{user?.phone || '+91 98765 43210'}</span>
+                  <span className="text-gray-200 font-medium">{user?.phone || '+91 0000000000'}</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-gray-800/30 border border-gray-700/40">
