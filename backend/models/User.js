@@ -55,17 +55,14 @@ const userSchema = new mongoose.Schema(
     },
 
     parentName: {
-      type: String,
-      required: true,
-      trim: true
-    },
+  type: String,
+  default: ''
+},
 
-    parentPhone: {
-      type: String,
-      required: true,
-      trim: true
-    },
-
+parentPhone: {
+  type: String,
+  default: ''
+},
     passwordHash: {
       type: String,
       required: true,

@@ -5,3 +5,4 @@ dist-ssr
 .env
 .DS_Store
 .system_generated
+backend/reset-password.js
