@@ -24,8 +24,6 @@ router.post('/auth/register', async (req, res) => {
       year,
       block,
       room,
-      parentName,
-      parentPhone,
       password
     } = req.body;
 
@@ -37,8 +35,6 @@ router.post('/auth/register', async (req, res) => {
       !phone ||
       !branch ||
       !year ||
-      !parentName ||
-      !parentPhone ||
       !password
     ) {
       return res.status(400).json({
@@ -95,8 +91,7 @@ router.post('/auth/register', async (req, res) => {
       year: year.trim(),
       block: block?.trim() || '',
       room: room?.trim() || '',
-      parentName: parentName.trim(),
-      parentPhone: parentPhone.trim(),
+      
       passwordHash,
       role: 'student',
       avatar: ''
@@ -126,8 +121,7 @@ router.post('/auth/register', async (req, res) => {
       year: user.year,
       block: user.block,
       room: user.room,
-      parentName: user.parentName,
-      parentPhone: user.parentPhone,
+     
       role: user.role,
       avatar: user.avatar,
       createdAt: user.createdAt
@@ -221,8 +215,7 @@ router.post('/auth/login', async (req, res) => {
       year: user.year,
       block: user.block,
       room: user.room,
-      parentName: user.parentName,
-      parentPhone: user.parentPhone,
+     
       role: user.role,
       avatar: user.avatar,
       createdAt: user.createdAt
