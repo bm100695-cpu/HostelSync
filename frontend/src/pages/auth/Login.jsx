@@ -64,58 +64,52 @@ export const Login = () => {
       role: 'student',
       title: 'Student Portal',
       user: 'Brijesh',
-      desc: 'Gate passes, Leave, AI complaints & Mess',
+      desc: 'Leave requests and mess details',
       icon: GraduationCap,
-      color: 'bg-emerald-50/80 hover:bg-emerald-100/70 border-emerald-200 text-emerald-800',
-      iconBg: 'bg-emerald-100 text-emerald-700',
+      color: 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800',
+      iconBg: 'bg-emerald-50 text-emerald-700',
     },
     {
       role: 'warden',
       title: 'Warden Portal',
       user: 'Brijsh Maurya',
-      desc: 'Approvals, Roll-call & WhatsApp alerts',
+      desc: 'Approve leave requests and manage attendance',
       icon: UserCheck,
-      color: 'bg-indigo-50/80 hover:bg-indigo-100/70 border-indigo-200 text-indigo-800',
-      iconBg: 'bg-indigo-100 text-indigo-700',
+      color: 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800',
+      iconBg: 'bg-emerald-50 text-emerald-700',
     },
     {
       role: 'admin',
       title: 'Admin Portal',
       user: 'Dean Student Affairs',
-      desc: 'Rooms, Users, Mess & BI Analytics',
+      desc: 'Manage rooms, students and hostel records',
       icon: ShieldAlert,
-      color: 'bg-purple-50/80 hover:bg-purple-100/70 border-purple-200 text-purple-800',
-      iconBg: 'bg-purple-100 text-purple-700',
+      color: 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800',
+      iconBg: 'bg-emerald-50 text-emerald-700',
     },
     {
       role: 'staff',
       title: 'Security / Staff',
       user: 'Vikram  (Guard)',
-      desc: 'Camera QR Code Pass Scanner & Logs',
+      desc: 'Verify gate passes and view entry logs',
       icon: ScanLine,
-      color: 'bg-amber-50/80 hover:bg-amber-100/70 border-amber-200 text-amber-800',
-      iconBg: 'bg-amber-100 text-amber-700',
+      color: 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800',
+      iconBg: 'bg-emerald-50 text-emerald-700',
     },
   ];
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden">
-      {/* Background soft ambient glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-100/60 rounded-full blur-[140px] pointer-events-none"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-100/60 rounded-full blur-[120px] pointer-events-none"></div>
-
+      
       <div className="w-full max-w-5xl z-10 space-y-8">
         {/* Header Branding */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
-            <span>Next-Gen Smart Campus Hostel Platform</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900">
-            HOSTEL<span className="text-brand-600">SYNC</span>
-          </h1>
+          
+         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+             Hostel<span className="text-emerald-700">Sync</span>
+         </h1>
           <p className="text-sm text-slate-600 max-w-md mx-auto">
-            Unified hostel operations with AI triage, digital QR passes, WhatsApp alerts, and attendance management.
+              College hostel management portal
           </p>
         </div>
 
@@ -123,9 +117,11 @@ export const Login = () => {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              🚀 1-Click Instant Demo Login
+              Choose a demo account
             </span>
-            <span className="text-[11px] text-brand-600 font-semibold">Select any persona to test live</span>
+           <span className="text-[11px] text-slate-500 font-medium">
+                    Select a role to explore the portal
+           </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -136,7 +132,7 @@ export const Login = () => {
                   key={item.role}
                   onClick={() => handleQuickDemoLogin(item.role)}
                   disabled={submitting}
-                  className={`p-4 rounded-3xl ${item.color} border text-left transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between group relative shadow-sm`}
+                  className={`p-4 rounded-xl ${item.color} border text-left transition-colors flex flex-col justify-between group hover:border-emerald-300`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className={`p-2.5 rounded-2xl ${item.iconBg}`}>
@@ -160,7 +156,7 @@ export const Login = () => {
         </div>
 
         {/* Manual Login Card */}
-        <div className="max-w-md mx-auto glass-card rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl relative bg-white">
+        <div className="max-w-md mx-auto rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm bg-white">
           <div className="text-center mb-6">
             <h2 className="text-lg font-bold text-slate-900">Manual Sign In</h2>
             <p className="text-xs text-slate-500 mt-1">Or enter registered campus credentials</p>
@@ -177,14 +173,14 @@ export const Login = () => {
             <div>
               <label className="block text-slate-700 font-semibold mb-1.5">Campus Email</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="student@hostelsync.com"
-                  className="w-full bg-slate-50 text-slate-900 pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-brand-500 transition"
+                  className="w-full bg-white text-slate-900 pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-colors"
                 />
               </div>
             </div>
@@ -192,14 +188,14 @@ export const Login = () => {
             <div>
               <label className="block text-slate-700 font-semibold mb-1.5">Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full bg-slate-50 text-slate-900 pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:border-brand-500 transition"
+                 className="w-full bg-white text-slate-900 pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:border-slate-400 focus:ring-0 transition-colors"
                 />
               </div>
             </div>
@@ -207,7 +203,7 @@ export const Login = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-500 hover:to-emerald-500 text-white font-bold text-xs tracking-wide shadow-lg shadow-brand-500/25 transition duration-200"
+              className="w-full py-3 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-sm transition-colors disabled:opacity-60"
             >
               {submitting ? 'Authenticating...' : 'Sign In to Portal'}
             </button>
@@ -222,8 +218,8 @@ export const Login = () => {
             </p>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">
-            <span>Powered by Node.js, Express, React, Vite & Gemini AI</span>
+          <div className="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-500">
+                HostelSync · College Hostel Management
           </div>
         </div>
       </div>
