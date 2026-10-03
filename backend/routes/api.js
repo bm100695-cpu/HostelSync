@@ -1,3 +1,7 @@
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
+// Pehle se imported 'User' model ka path ('../models/User') sahi hai.
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const express = require('express');
@@ -809,6 +813,70 @@ router.post('/whatsapp/broadcast', protect, authorize('admin', 'warden'), async 
     message: `📢 [HostelSync Broadcast]\n${message}\n\n- Issued by: ${req.user.name} (${req.user.role.toUpperCase()})`
   });
   res.json({ success: true, message: 'Broadcast dispatched to WhatsApp gateway', data: log });
+});
+
+
+
+// 👇 IN CODES KO PURANI APIs KE BAAD ADD KAREIN 👇
+
+// LINE 2: Cloudinary Setup (.env se API keys connect karna)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// LINE 3: Multer Storage Setup (Photo ka behavior set karna)
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'hostelsync_profiles', // Cloudinary me folder ban jayega
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
+  },
+});
+const upload = multer({ storage: storage });
+
+// LINE 4: API Route/Endpoint banana (Photo upload karne ke liye)
+router.put('/update-photo/:userId', upload.single('profileImage'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Koi file upload nahi hui" });
+    }
+
+    const imageUrl = req.file.path;
+    const userId = req.params.userId;
+
+    // SMART CHECK: Agar ID 'usr-' se shuru hoti hai, toh ye Demo account hai
+    if (userId.startsWith('usr-')) {
+        return res.status(200).json({ 
+          success: true, 
+          message: "Demo account profile photo update ho gayi!",
+          profileImage: imageUrl
+        });
+    }
+
+    // Agar asli account hai, toh MongoDB me update karein
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profileImage: imageUrl },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User nahi mila" });
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      message: "Profile photo permanently update ho gayi!",
+      profileImage: imageUrl, 
+      user: updatedUser 
+    });
+
+  } catch (error) {
+    console.error("Upload Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 module.exports = router;
