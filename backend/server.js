@@ -3,14 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path'); // 👇 NAYA CODE: Path module add kiya
-const connectDB = require('./config/db');
 const apiRoutes = require('./routes/api');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Initialize Database connection
-connectDB();
 
 // Middleware
 app.use(cors());
