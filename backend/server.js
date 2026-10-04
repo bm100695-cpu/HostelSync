@@ -57,4 +57,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`🚀 HostelSync Backend Server running on port ${PORT}`);
   console.log(`📡 REST API endpoint ready at http://localhost:${PORT}/api`);
-})
+});

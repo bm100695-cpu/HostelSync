@@ -1,4 +1,10 @@
 // === 1. AAPKE SARE IMPORTS ===
+const {
+  findUserByEmail,
+  findUserByRollNo,
+  createUser,
+  updateProfileImage
+} = require('../services/userService');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
@@ -81,34 +87,18 @@ router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req
 router.post('/auth/register', async (req, res) => {
   try {
     const {
-      name,
-      rollNo,
-      email,
-      phone,
-      branch,
-      year,
-      block,
-      room,
-      password
+      name, rollNo, email, phone, branch, year,
+      block, room, password
     } = req.body;
 
-    // Required fields
-    if (
-      !name ||
-      !rollNo ||
-      !email ||
-      !phone ||
-      !branch ||
-      !year ||
-      !password
-    ) {
+    if (!name || !rollNo || !email || !phone ||
+        !branch || !year || !password) {
       return res.status(400).json({
         success: false,
         message: 'Please fill all required fields'
       });
     }
 
-    // Password validation
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
@@ -119,91 +109,52 @@ router.post('/auth/register', async (req, res) => {
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedRollNo = rollNo.trim().toUpperCase();
 
-    // Check duplicate email
-    const existingEmail = await User.findOne({
-      email: normalizedEmail
-    });
-
-    if (existingEmail) {
+    if (await findUserByEmail(normalizedEmail)) {
       return res.status(409).json({
         success: false,
         message: 'Email already registered'
       });
     }
 
-    // Check duplicate roll number
-    const existingRollNo = await User.findOne({
-      rollNo: normalizedRollNo
-    });
-
-    if (existingRollNo) {
+    if (await findUserByRollNo(normalizedRollNo)) {
       return res.status(409).json({
         success: false,
         message: 'Roll number already registered'
       });
     }
 
-    // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create student
-    const user = await User.create({
+    const user = await createUser({
       name: name.trim(),
       rollNo: normalizedRollNo,
       email: normalizedEmail,
       phone: phone.trim(),
       branch: branch.trim(),
-      year: year.trim(),
+      year: String(year).trim(),
       block: block?.trim() || '',
       room: room?.trim() || '',
-      
       passwordHash,
       role: 'student',
       avatar: ''
     });
 
-    // JWT
     const token = jwt.sign(
-      {
-        id: user._id.toString(),
-        email: user.email,
-        role: user.role
-      },
+      { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
-      {
-        expiresIn: '7d'
-      }
+      { expiresIn: '7d' }
     );
-
-    // Password remove karke response
-    const userResponse = {
-      id: user._id.toString(),
-      name: user.name,
-      rollNo: user.rollNo,
-      email: user.email,
-      phone: user.phone,
-      branch: user.branch,
-      year: user.year,
-      block: user.block,
-      room: user.room,
-     
-      role: user.role,
-      avatar: user.avatar,
-      createdAt: user.createdAt
-    };
 
     res.status(201).json({
       success: true,
       message: 'Student registration successful',
       token,
-      user: userResponse
+      user
     });
-
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Registration error:', error.message);
 
-    // MongoDB duplicate key error
-    if (error.code === 11000) {
+    if (error.code === '23505') {
       return res.status(409).json({
         success: false,
         message: 'Email or Roll Number already exists'
@@ -217,7 +168,6 @@ router.post('/auth/register', async (req, res) => {
   }
 });
 
-
 // LOGIN
 // LOGIN ROUTE
 router.post('/auth/login', async (req, res) => {
@@ -225,49 +175,53 @@ router.post('/auth/login', async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and password are required' });
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required'
+      });
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
-    const user = await User.findOne({ email: normalizedEmail }).select('+passwordHash');
+    const user = await findUserByEmail(email.trim().toLowerCase());
 
-    if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+    if (!user || !user.passwordHash) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user.passwordHash
+    );
+
     if (!isPasswordValid) {
-      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
     }
 
     const token = jwt.sign(
-      { id: user._id.toString(), email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Frontend ko bheja jaane wala original data
-    const userResponse = {
-      id: user._id.toString(),
-      name: user.name,
-      rollNo: user.rollNo,
-      email: user.email,
-      phone: user.phone,
-      branch: user.branch,
-      year: user.year,
-      block: user.block,
-      room: user.room,
-      role: user.role,
-      avatar: user.avatar,
-      profileImage: user.profileImage, // Yahi photo dashboard pe dikhegi
-      createdAt: user.createdAt
-    };
+    delete user.passwordHash;
 
-    res.json({ success: true, message: 'Login successful', token, user: userResponse });
-
+    res.json({
+      success: true,
+      message: 'Login successful',
+      token,
+      user
+    });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ success: false, message: 'Login failed' });
+    console.error('Login error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Login failed'
+    });
   }
 });
 
@@ -869,45 +823,47 @@ const userProfileStorage = new CloudinaryStorage({
 const userProfileUpload = multer({ storage: userProfileStorage });
 
 // LINE 4: API Route/Endpoint banana (Photo upload karne ke liye)
-router.put('/update-photo/:userId', userProfileUpload.single('profileImage'), async (req, res) => {
+router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "Koi file upload nahi hui" });
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
     }
 
-    const imageUrl = req.file.path;
-    const userId = req.params.userId;
+    const userId = req.params.id;
 
-    // SMART CHECK: Agar ID 'usr-' se shuru hoti hai, toh ye Demo account hai
+    // Demo account: image is not saved permanently
     if (userId.startsWith('usr-')) {
-        return res.status(200).json({ 
-          success: true, 
-          message: "Demo account profile photo update ho gayi!",
-          profileImage: imageUrl
-        });
+      return res.json({
+        success: true,
+        message: 'Demo profile photo updated',
+        profileImage: req.file.path
+      });
     }
 
-    // Agar asli account hai, toh MongoDB me update karein
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profileImage: imageUrl },
-      { new: true }
-    );
+    const updatedUser = await updateProfileImage(userId, req.file.path);
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "User nahi mila" });
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
     }
 
-    res.status(200).json({ 
-      success: true, 
-      message: "Profile photo permanently update ho gayi!",
-      profileImage: imageUrl, 
-      user: updatedUser 
+    res.json({
+      success: true,
+      message: 'Profile photo updated',
+      profileImage: updatedUser.profileImage,
+      user: updatedUser
     });
-
   } catch (error) {
-    console.error("Upload Error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error('Photo update error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Photo update failed'
+    });
   }
 });
 
