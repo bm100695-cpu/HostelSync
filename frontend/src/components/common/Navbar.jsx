@@ -142,10 +142,14 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
         {/* User Avatar & Logout */}
         <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
           <img
-            src={user?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'}
-            alt={user?.name}
-            className="w-8 h-8 rounded-full ring-2 ring-brand-500/30 object-cover"
-          />
+  src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=F3F4F6&color=374151`}
+  alt={user?.name || 'Profile'}
+  onError={(e) => { 
+    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=F3F4F6&color=374151`; 
+    e.target.onerror = null; 
+  }}
+  className="w-8 h-8 rounded-full object-cover flex-shrink-0 bg-gray-100 ring-2 ring-gray-200" 
+/>
           <div className="hidden xl:block text-left">
             <p className="text-xs font-bold text-slate-800 truncate max-w-[120px]">{user?.name}</p>
             <p className="text-[10px] text-slate-400">{user?.room || user?.block || 'Campus'}</p>

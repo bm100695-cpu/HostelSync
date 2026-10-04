@@ -1,7 +1,7 @@
+// === 1. AAPKE SARE IMPORTS ===
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
-// Pehle se imported 'User' model ka path ('../models/User') sahi hai.
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const express = require('express');
@@ -12,6 +12,67 @@ const mockStore = require('../data/mockDbStore');
 const { protect, authorize, JWT_SECRET } = require('../middleware/auth');
 const { analyzeComplaintWithGemini, askHostelAI } = require('../services/geminiService');
 const { sendWhatsAppNotification } = require('../services/whatsappService');
+
+// ========================================================
+// === 2. YAHAN SE NAYA CLOUDINARY AUR UPLOAD CODE HAI ===
+// ========================================================
+
+// Cloudinary Config (Make sure .env me keys daali hon)
+// ========================================================
+// === 2. YAHAN SE NAYA CLOUDINARY AUR UPLOAD CODE HAI ===
+// ========================================================
+
+// Cloudinary Config
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// 👇 Variable ka naam 'storage' se badal kar 'cloudinaryStorage' kar diya
+const cloudinaryStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'hostelsync_profiles',
+    allowedFormats: ['jpeg', 'png', 'jpg'],
+  },
+});
+
+// 👇 Yahan bhi naam 'profileUpload' kar diya
+const profileUpload = multer({ storage: cloudinaryStorage });
+
+// Photo Update API Route (Yahan bhi profileUpload.single lagaya hai)
+router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Koi file upload nahi hui' });
+    }
+
+    const photoUrl = req.file.path; 
+    console.log("Cloudinary Image URL:", photoUrl);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.params.id }, 
+      { profileImage: photoUrl },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Photo Cloudinary par successfully upload ho gayi!',
+      user: updatedUser 
+    });
+
+  } catch (error) {
+    console.error('Cloudinary Upload Error:', error);
+    res.status(500).json({ success: false, message: 'Server error photo upload karte time' });
+  }
+});
+
+// ========================================================
+// === 3. ISKE NEECHE AAPKE BAAKI KE PURANE ROUTES HONGE ===
+// === (Jaise router.post('/auth/login', ...) wagaira)   ===
+// ========================================================
 
 // ================= AUTH ROUTES =================
 
@@ -158,57 +219,34 @@ router.post('/auth/register', async (req, res) => {
 
 
 // LOGIN
+// LOGIN ROUTE
 router.post('/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required'
-      });
+      return res.status(400).json({ success: false, message: 'Email and password are required' });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-
-    // MongoDB user
-    const user = await User.findOne({
-      email: normalizedEmail
-    }).select('+passwordHash');
+    const user = await User.findOne({ email: normalizedEmail }).select('+passwordHash');
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password'
-      });
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    // Compare password
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      user.passwordHash
-    );
-
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password'
-      });
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    // JWT
     const token = jwt.sign(
-      {
-        id: user._id.toString(),
-        email: user.email,
-        role: user.role
-      },
+      { id: user._id.toString(), email: user.email, role: user.role },
       JWT_SECRET,
-      {
-        expiresIn: '7d'
-      }
+      { expiresIn: '7d' }
     );
 
+    // Frontend ko bheja jaane wala original data
     const userResponse = {
       id: user._id.toString(),
       name: user.name,
@@ -219,29 +257,19 @@ router.post('/auth/login', async (req, res) => {
       year: user.year,
       block: user.block,
       room: user.room,
-     
       role: user.role,
       avatar: user.avatar,
+      profileImage: user.profileImage, // Yahi photo dashboard pe dikhegi
       createdAt: user.createdAt
     };
 
-    res.json({
-      success: true,
-      message: 'Login successful',
-      token,
-      user: userResponse
-    });
+    res.json({ success: true, message: 'Login successful', token, user: userResponse });
 
   } catch (error) {
     console.error('Login error:', error);
-
-    res.status(500).json({
-      success: false,
-      message: 'Login failed'
-    });
+    res.status(500).json({ success: false, message: 'Login failed' });
   }
 });
-
 
 // QUICK LOGIN
 router.post('/auth/quick-login', (req, res) => {
@@ -820,24 +848,28 @@ router.post('/whatsapp/broadcast', protect, authorize('admin', 'warden'), async 
 // 👇 IN CODES KO PURANI APIs KE BAAD ADD KAREIN 👇
 
 // LINE 2: Cloudinary Setup (.env se API keys connect karna)
+// 👇 IN CODES KO PURANI APIs KE BAAD ADD KAREIN 👇
+
+// LINE 2: Cloudinary Setup (.env se API keys connect karna)
+// LINE 2: Cloudinary Setup (.env se API keys connect karna)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// LINE 3: Multer Storage Setup (Photo ka behavior set karna)
-const storage = new CloudinaryStorage({
+// LINE 3: Multer Storage Setup (Naam change kiya taaki kisi aur se clash na ho)
+const userProfileStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'hostelsync_profiles', // Cloudinary me folder ban jayega
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
   },
 });
-const upload = multer({ storage: storage });
+const userProfileUpload = multer({ storage: userProfileStorage });
 
 // LINE 4: API Route/Endpoint banana (Photo upload karne ke liye)
-router.put('/update-photo/:userId', upload.single('profileImage'), async (req, res) => {
+router.put('/update-photo/:userId', userProfileUpload.single('profileImage'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "Koi file upload nahi hui" });

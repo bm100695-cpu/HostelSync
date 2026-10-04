@@ -17,8 +17,8 @@ import {
 } from 'lucide-react';
 
 export const Login = () => {
-  const [email, setEmail] = useState('student@hostelsync.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const { login, quickLogin } = useAuth();

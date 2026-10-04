@@ -55,14 +55,15 @@ const userSchema = new mongoose.Schema(
     },
 
     parentName: {
-  type: String,
-  default: ''
-},
+      type: String,
+      default: ''
+    },
 
-parentPhone: {
-  type: String,
-  default: ''
-},
+    parentPhone: {
+      type: String,
+      default: ''
+    },
+    
     passwordHash: {
       type: String,
       required: true,
@@ -76,6 +77,12 @@ parentPhone: {
     },
 
     avatar: {
+      type: String,
+      default: ''
+    },
+
+    // 👇 NAYA FIELD JO PHOTO KO HAMESHA SAVE RAKHEGA 👇
+    profileImage: {
       type: String,
       default: ''
     }

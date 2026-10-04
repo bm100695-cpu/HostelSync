@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path'); // 👇 NAYA CODE: Path module add kiya
 const connectDB = require('./config/db');
 const apiRoutes = require('./routes/api');
 
@@ -16,6 +17,10 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('dev'));
+
+// 👇 NAYA CODE: Yeh line browser ko uploads folder access karne ki permission degi 👇
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// (Agar aapka folder 'uploads' ke alawa kisi aur naam se hai, toh dono jagah 'uploads' ki jagah wo naam likh dein)
 
 // API Routes
 app.use('/api', apiRoutes);
@@ -52,4 +57,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`🚀 HostelSync Backend Server running on port ${PORT}`);
   console.log(`📡 REST API endpoint ready at http://localhost:${PORT}/api`);
-});
+})

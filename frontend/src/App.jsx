@@ -53,17 +53,22 @@ const RoleBasedRedirect = () => {
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      {/* 👇 NAYA CODE: Yahan future flags add kiye hain Console warnings hatane ke liye 👇 */}
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           {/* Public Authentication Route */}
           <Route path="/login" element={<Login />} />
-           {/* Student Registration */}
-            <Route
+          
+          {/* Student Registration */}
+          <Route
             path="/student-registration"
             element={<StudentRegistration />}
-         />
+          />
+          
           {/* Root Redirect based on logged in role */}
           <Route path="/" element={<RoleBasedRedirect />} />
+
+          {/* ... (BAAKI KA PURA CODE WAISE HI RAHEGA) ... */}
 
           {/* Authenticated Dashboard Shell Layout */}
           <Route element={<DashboardLayout />}>

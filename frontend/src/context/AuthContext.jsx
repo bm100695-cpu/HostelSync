@@ -48,14 +48,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // 👇 NAYA CODE: Profile photo update hone par turant state update karne ke liye
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData);
+    localStorage.setItem('hostelsync_user', JSON.stringify(updatedUserData));
+  };
+
   const logout = () => {
     localStorage.removeItem('hostelsync_token');
     localStorage.removeItem('hostelsync_user');
     setUser(null);
   };
 
+  // Provider mein updateUser ko pass kar diya
   return (
-    <AuthContext.Provider value={{ user, login, quickLogin, logout, loading }}>
+   <AuthContext.Provider value={{ user, setUser, login, quickLogin, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
-// 👇 YAHAN PATH THEEK KAR DIYA HAI (Sirf ek bar ../ hai) 👇
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from '../context/AuthContext';
 import { Upload, Loader } from 'lucide-react';
 
 export const ProfileUpload = () => {
+  // 👇 FIX: Yahan user ke sath setUser add kar diya hai
   const { user, setUser } = useAuth();
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // File select karne par ye function chalta hai
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Photo save karne wala function (Frontend Logic)
   const handleUpload = async () => {
     if (!file) return alert("Pehle ek photo select karein!");
+    setUploading(true);
 
-    // Photo file bhejne ke liye FormData dabbi banana zaroori hai
     const formData = new FormData();
-    // 'profileImage' naam backend ke API code (.single('profileImage')) se match hona chahiye
-    formData.append('profileImage', file); 
+    formData.append('profileImage', file);
 
-   try {
-      setUploading(true);
-      
-      const response = await fetch(`http://localhost:5000/api/update-photo/${user?._id || user?.id}`, {
+    try {
+      const response = await fetch(`http://localhost:5000/api/update-photo/${user?._id || user?.id || 'usr-std-1'}`, {
         method: 'PUT',
         body: formData,
       });
@@ -35,14 +30,23 @@ export const ProfileUpload = () => {
       if (response.ok && data.success) {
         alert("Profile photo successfully update ho gayi!");
         setFile(null);
-        // Is line se page turant refresh ho jayega aur nayi photo dikh jayegi
-        window.location.reload(); 
+
+        // NAYA LOGIC: Bina refresh kiye photo update hogi
+        const newImageUrl = data.profileImage || data.user?.profileImage;
+
+        if (setUser) {
+          const updatedUser = { ...user, profileImage: newImageUrl };
+          setUser(updatedUser); // Context update ho jayega
+          localStorage.setItem('hostelsync_user', JSON.stringify(updatedUser)); // Storage update ho jayega
+        } else {
+          window.location.reload(); // Fallback agar setUser miss ho jaye
+        }
+
       } else {
-        alert("Upload fail ho gaya: " + data.message);
+        alert("Upload fail ho gaya: " + (data.message || 'Error'));
       }
     } catch (error) {
       console.error("Frontend Error:", error);
-      // F12 dabane par Console me asli error dikhega
       alert("Error aayi hai. Kripya F12 dabakar Console check karein.");
     } finally {
       setUploading(false);
@@ -50,22 +54,22 @@ export const ProfileUpload = () => {
   };
 
   return (
-    <div className="mt-6 p-5 border border-gray-800 rounded-2xl bg-gray-800/40">
-      <h3 className="text-sm font-bold text-white mb-4">Update Profile Photo</h3>
+    <div className="mt-4 p-5 border border-gray-200 rounded-2xl bg-gray-50 shadow-sm">
+      <h3 className="text-sm font-bold text-gray-700 mb-4">Update Profile Photo</h3>
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
-          className="text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-500/10 file:text-emerald-400 hover:file:bg-emerald-500/20 cursor-pointer"
+          className="text-xs text-gray-600 w-full file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200 cursor-pointer transition"
         />
         <button
           onClick={handleUpload}
           disabled={uploading || !file}
-          className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white transition ${
-            uploading || !file 
-              ? 'bg-gray-700 cursor-not-allowed text-gray-400' 
-              : 'bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/20'
+          className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold text-white transition min-w-[140px] ${
+            uploading || !file
+              ? 'bg-gray-300 cursor-not-allowed text-gray-500'
+              : 'bg-green-600 hover:bg-green-500 shadow-md shadow-green-500/20'
           }`}
         >
           {uploading ? <Loader className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
