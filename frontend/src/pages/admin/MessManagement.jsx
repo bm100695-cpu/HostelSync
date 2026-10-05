@@ -57,15 +57,16 @@ export const AdminMessManagement = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Campus Mess & Catering Management</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          {/* Changed from text-white to text-gray-900 for light theme visibility */}
+          <h1 className="text-2xl font-bold text-gray-900">Campus Mess & Catering Management</h1>
+          <p className="text-xs text-gray-500 mt-1">
             Configure weekly 4-course food items, monitor dining ratings, and manage vendor feedback.
           </p>
         </div>
 
         <button
           onClick={handleSaveMenu}
-          className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-lg shadow-purple-600/30 transition flex items-center gap-2"
+          className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-sm transition flex items-center gap-2"
         >
           <Save className="w-4 h-4" />
           <span>Save Weekly Schedule</span>
@@ -73,7 +74,7 @@ export const AdminMessManagement = () => {
       </div>
 
       {saveSuccess && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>Weekly meal changes updated and synced across all student apps!</span>
         </div>
@@ -85,10 +86,10 @@ export const AdminMessManagement = () => {
           <button
             key={day}
             onClick={() => setSelectedDay(day)}
-            className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-150 ${
+            className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-150 ${
               selectedDay === day
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30 scale-105'
-                : 'bg-gray-900/80 text-gray-400 hover:text-white border border-gray-800'
+                ? 'bg-purple-600 text-white shadow-md'
+                : 'bg-slate-700 text-white hover:bg-slate-600' // Matches the dark slate buttons in the screenshot
             }`}
           >
             {day}
@@ -98,74 +99,77 @@ export const AdminMessManagement = () => {
 
       {/* Editable Meal Form Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="glass-card p-6 rounded-3xl border border-gray-800 space-y-3">
+        <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Breakfast (07:30 - 09:30 AM)</span>
-            <Edit3 className="w-4 h-4 text-gray-500" />
+            <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Breakfast (07:30 - 09:30 AM)</span>
+            <Edit3 className="w-4 h-4 text-gray-400" />
           </div>
           <textarea
             rows={3}
             value={currentDayMenu.breakfast || ''}
             onChange={(e) => handleFieldChange('breakfast', e.target.value)}
-            className="w-full bg-gray-800 text-white p-3 rounded-2xl border border-gray-700 text-xs focus:border-purple-500"
+            className="w-full bg-gray-50 text-gray-800 p-3 rounded-2xl border border-gray-200 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none resize-none"
           />
         </div>
 
-        <div className="glass-card p-6 rounded-3xl border border-gray-800 space-y-3">
+        <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Lunch (12:30 - 02:30 PM)</span>
-            <Edit3 className="w-4 h-4 text-gray-500" />
+            <span className="text-xs font-bold text-emerald-500 uppercase tracking-wider">Lunch (12:30 - 02:30 PM)</span>
+            <Edit3 className="w-4 h-4 text-gray-400" />
           </div>
           <textarea
             rows={3}
             value={currentDayMenu.lunch || ''}
             onChange={(e) => handleFieldChange('lunch', e.target.value)}
-            className="w-full bg-gray-800 text-white p-3 rounded-2xl border border-gray-700 text-xs focus:border-purple-500"
+            className="w-full bg-gray-50 text-gray-800 p-3 rounded-2xl border border-gray-200 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none resize-none"
           />
         </div>
 
-        <div className="glass-card p-6 rounded-3xl border border-gray-800 space-y-3">
+        <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Evening Snacks (05:00 - 06:15 PM)</span>
-            <Edit3 className="w-4 h-4 text-gray-500" />
+            <span className="text-xs font-bold text-indigo-500 uppercase tracking-wider">Evening Snacks (05:00 - 06:15 PM)</span>
+            <Edit3 className="w-4 h-4 text-gray-400" />
           </div>
           <textarea
             rows={3}
             value={currentDayMenu.snacks || ''}
             onChange={(e) => handleFieldChange('snacks', e.target.value)}
-            className="w-full bg-gray-800 text-white p-3 rounded-2xl border border-gray-700 text-xs focus:border-purple-500"
+            className="w-full bg-gray-50 text-gray-800 p-3 rounded-2xl border border-gray-200 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none resize-none"
           />
         </div>
 
-        <div className="glass-card p-6 rounded-3xl border border-gray-800 space-y-3">
+        <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Royal Dinner (07:45 - 09:45 PM)</span>
-            <Edit3 className="w-4 h-4 text-gray-500" />
+            <span className="text-xs font-bold text-purple-500 uppercase tracking-wider">Royal Dinner (07:45 - 09:45 PM)</span>
+            <Edit3 className="w-4 h-4 text-gray-400" />
           </div>
           <textarea
             rows={3}
             value={currentDayMenu.dinner || ''}
             onChange={(e) => handleFieldChange('dinner', e.target.value)}
-            className="w-full bg-gray-800 text-white p-3 rounded-2xl border border-gray-700 text-xs focus:border-purple-500"
+            className="w-full bg-gray-50 text-gray-800 p-3 rounded-2xl border border-gray-200 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none resize-none"
           />
         </div>
       </div>
 
       {/* Student Feedback Reviews */}
-      <div className="glass-card p-6 rounded-3xl border border-gray-800 space-y-4">
-        <h3 className="text-base font-bold text-white flex items-center gap-2">
+      <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-4">
+        <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
           <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
           <span>Recent Dining Ratings & Student Feedback</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {(messData?.studentFeedback || []).map((fb) => (
-            <div key={fb.id} className="p-3.5 rounded-2xl bg-gray-800/40 border border-gray-700/50 space-y-1.5 text-xs">
+            <div key={fb.id} className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-1.5 text-sm">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-white">{fb.studentName}</span>
-                <span className="text-amber-400 font-bold">⭐ {fb.rating}.0 / 5.0</span>
+                <span className="font-bold text-gray-900">{fb.studentName}</span>
+                <span className="text-amber-500 font-bold flex items-center gap-1">
+                   <Star className="w-3 h-3 fill-amber-500" />
+                   {fb.rating}.0 / 5.0
+                </span>
               </div>
-              <p className="text-gray-300 italic">"{fb.comment}"</p>
-              <span className="text-[10px] text-gray-500 block">{fb.date}</span>
+              <p className="text-gray-600 italic">"{fb.comment}"</p>
+              <span className="text-[11px] text-gray-400 block">{fb.date}</span>
             </div>
           ))}
         </div>
