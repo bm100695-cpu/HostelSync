@@ -813,17 +813,20 @@ cloudinary.config({
 });
 
 // LINE 3: Multer Storage Setup (Naam change kiya taaki kisi aur se clash na ho)
+// LINE 3: Multer Storage Setup
 const userProfileStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'hostelsync_profiles', // Cloudinary me folder ban jayega
+    folder: 'hostelsync_profiles', 
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
   },
 });
+
+// Defining the variable as 'userProfileUpload'
 const userProfileUpload = multer({ storage: userProfileStorage });
 
-// LINE 4: API Route/Endpoint banana (Photo upload karne ke liye)
-router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req, res) => {
+// LINE 4: Changed 'profileUpload' to 'userProfileUpload'
+router.put('/update-photo/:id', userProfileUpload.single('profileImage'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -839,7 +842,7 @@ router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req
       return res.json({
         success: true,
         message: 'Demo profile photo updated',
-        profileImage: req.file.path
+        profileImage: req.file.path // Cloudinary returns the URL in req.file.path
       });
     }
 
@@ -851,19 +854,17 @@ router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req
         message: 'User not found'
       });
     }
-
-    res.json({
+    
+    // Remember to send a success response for the normal user update!
+    return res.json({
       success: true,
-      message: 'Profile photo updated',
-      profileImage: updatedUser.profileImage,
-      user: updatedUser
+      message: 'Profile photo updated successfully',
+      profileImage: req.file.path
     });
+
   } catch (error) {
-    console.error('Photo update error:', error.message);
-    res.status(500).json({
-      success: false,
-      message: 'Photo update failed'
-    });
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 

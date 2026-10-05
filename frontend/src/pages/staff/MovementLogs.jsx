@@ -19,37 +19,41 @@ export const SecurityMovementLogs = () => {
   }, []);
 
   const filteredLogs = logs.filter(l => 
-    l.studentName.toLowerCase().includes(search.toLowerCase()) ||
-    l.rollNo.toLowerCase().includes(search.toLowerCase()) ||
-    l.passId.toLowerCase().includes(search.toLowerCase())
+    l.studentName?.toLowerCase().includes(search.toLowerCase()) ||
+    l.rollNo?.toLowerCase().includes(search.toLowerCase()) ||
+    l.passId?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Campus Gate Movement Audit Logs</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          {/* Header text changed to dark gray for light mode */}
+          <h1 className="text-2xl font-bold text-gray-900">Campus Gate Movement Audit Logs</h1>
+          <p className="text-sm text-gray-500 mt-1">
             Real-time feed of all physical student check-ins and check-outs through security gates.
           </p>
         </div>
 
         <div className="relative min-w-[240px]">
-          <Search className="w-4 h-4 text-gray-500 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+          {/* Search input changed to white background with light border */}
           <input
             type="text"
             placeholder="Search logs by student, roll no..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-gray-900 text-white pl-9 pr-4 py-2 rounded-xl text-xs border border-gray-700"
+            className="w-full bg-white text-gray-900 pl-9 pr-4 py-2 rounded-xl text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           />
         </div>
       </div>
 
-      <div className="glass-card rounded-3xl border border-gray-800 overflow-hidden">
+      {/* Table container changed to white background with light border */}
+      <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-900 text-gray-400 uppercase text-[10px] tracking-wider border-b border-gray-800">
+          <table className="w-full text-left text-sm">
+            {/* Table header updated to light gray text and no background */}
+            <thead className="text-gray-500 uppercase text-[11px] font-bold tracking-wider border-b border-gray-100">
               <tr>
                 <th className="py-4 px-6">Timestamp</th>
                 <th className="py-4 px-6">Action</th>
@@ -59,18 +63,20 @@ export const SecurityMovementLogs = () => {
                 <th className="py-4 px-6">Parent SMS</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800 text-gray-300">
+            {/* Dividers updated to light gray */}
+            <tbody className="divide-y divide-gray-100 text-gray-600">
               {filteredLogs.map((log) => (
-                <tr key={log.id} className="hover:bg-gray-800/40">
-                  <td className="py-4 px-6 text-gray-400 font-mono">
+                <tr key={log.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="py-4 px-6 text-gray-500 font-mono text-xs">
                     {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                   </td>
                   <td className="py-4 px-6">
+                    {/* Action badges updated to standard light mode opacities */}
                     <span
-                      className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border ${
+                      className={`px-3 py-1 rounded-full text-[11px] font-bold inline-flex items-center gap-1.5 border ${
                         log.action === 'EXIT'
-                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                          ? 'bg-amber-50 text-amber-500 border-amber-200'
+                          : 'bg-emerald-50 text-emerald-500 border-emerald-200'
                       }`}
                     >
                       {log.action === 'EXIT' ? <ArrowRight className="w-3 h-3" /> : <ArrowLeft className="w-3 h-3" />}
@@ -78,14 +84,15 @@ export const SecurityMovementLogs = () => {
                     </span>
                   </td>
                   <td className="py-4 px-6">
-                    <p className="font-bold text-white">{log.studentName}</p>
-                    <p className="text-[11px] text-brand-400 font-mono">{log.rollNo}</p>
+                    {log.studentName && <p className="font-semibold text-gray-900">{log.studentName}</p>}
+                    {/* Roll number set to emerald green to match your screenshot */}
+                    <p className="text-xs text-emerald-500 font-medium">{log.rollNo}</p>
                   </td>
-                  <td className="py-4 px-6 font-mono text-gray-400">{log.passId}</td>
-                  <td className="py-4 px-6 text-gray-300">{log.gate} ({log.guardName})</td>
+                  <td className="py-4 px-6 font-mono text-gray-500 text-xs">{log.passId}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{log.gate} ({log.guardName})</td>
                   <td className="py-4 px-6">
-                    <span className="text-emerald-400 font-semibold flex items-center gap-1 text-[11px]">
-                      <ShieldCheck className="w-3.5 h-3.5" /> Delivered
+                    <span className="text-emerald-500 font-medium flex items-center gap-1.5 text-xs">
+                      <ShieldCheck className="w-4 h-4" /> Delivered
                     </span>
                   </td>
                 </tr>

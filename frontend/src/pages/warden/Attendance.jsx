@@ -74,15 +74,16 @@ export const WardenAttendance = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Night Roll Call Attendance</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          {/* Text changed to dark gray */}
+          <h1 className="text-2xl font-bold text-gray-900">Night Roll Call Attendance</h1>
+          <p className="text-sm text-gray-500 mt-1">
             Daily 09:30 PM curfew physical verification checklist with instant absentee parent broadcast.
           </p>
         </div>
 
         <button
           onClick={handleSubmitRollCall}
-          className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition flex items-center gap-2"
+          className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md shadow-indigo-600/20 transition flex items-center gap-2"
         >
           <Send className="w-4 h-4" />
           <span>Lock & Submit Roll Call</span>
@@ -90,37 +91,37 @@ export const WardenAttendance = () => {
       </div>
 
       {submitted && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 shrink-0" />
           <span>Night roll call registered. Absentee alerts automatically sent to parents!</span>
         </div>
       )}
 
-      {/* Attendance Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
-        <div className="glass-card p-4 rounded-2xl border border-gray-800">
-          <span className="text-gray-400 font-medium">Total Registered</span>
-          <p className="text-2xl font-bold text-white mt-1">{students.length}</p>
+      {/* Attendance Stats Cards - Updated to solid white background with light borders */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <span className="text-gray-500 font-medium text-xs uppercase tracking-wider block">Total Registered</span>
+          <p className="text-3xl font-bold text-gray-900 mt-2">{students.length}</p>
         </div>
-        <div className="glass-card p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/20">
-          <span className="text-emerald-400 font-medium">Present in Room</span>
-          <p className="text-2xl font-bold text-emerald-400 mt-1">{presentCount}</p>
+        <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm">
+          <span className="text-emerald-500 font-medium text-xs uppercase tracking-wider block">Present in Room</span>
+          <p className="text-3xl font-bold text-emerald-600 mt-2">{presentCount}</p>
         </div>
-        <div className="glass-card p-4 rounded-2xl border border-rose-500/30 bg-rose-950/20">
-          <span className="text-rose-400 font-medium">Unaccounted Absent</span>
-          <p className="text-2xl font-bold text-rose-400 mt-1">{absentCount}</p>
+        <div className="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm">
+          <span className="text-rose-500 font-medium text-xs uppercase tracking-wider block">Unaccounted Absent</span>
+          <p className="text-3xl font-bold text-rose-600 mt-2">{absentCount}</p>
         </div>
-        <div className="glass-card p-4 rounded-2xl border border-amber-500/30 bg-amber-950/20">
-          <span className="text-amber-400 font-medium">Sanctioned Leave</span>
-          <p className="text-2xl font-bold text-amber-400 mt-1">{leaveCount}</p>
+        <div className="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm">
+          <span className="text-amber-500 font-medium text-xs uppercase tracking-wider block">Sanctioned Leave</span>
+          <p className="text-3xl font-bold text-amber-600 mt-2">{leaveCount}</p>
         </div>
       </div>
 
-      {/* Student Checklist Table */}
-      <div className="glass-card rounded-3xl border border-gray-800 overflow-hidden">
+      {/* Student Checklist Table - Changed to white background with light borders */}
+      <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-900 text-gray-400 uppercase text-[10px] tracking-wider border-b border-gray-800">
+          <table className="w-full text-left text-sm">
+            <thead className="text-gray-500 uppercase text-[11px] font-bold tracking-wider border-b border-gray-100 bg-gray-50/50">
               <tr>
                 <th className="py-4 px-6">Room</th>
                 <th className="py-4 px-6">Student Name</th>
@@ -128,40 +129,41 @@ export const WardenAttendance = () => {
                 <th className="py-4 px-6 text-center">Mark Attendance Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800 text-gray-300">
+            <tbody className="divide-y divide-gray-100 text-gray-600">
               {students.map((std) => (
-                <tr key={std.id} className="hover:bg-gray-800/40">
-                  <td className="py-4 px-6 font-bold text-white">{std.room || 'B-304'}</td>
-                  <td className="py-4 px-6 font-medium text-white">{std.name}</td>
-                  <td className="py-4 px-6 font-mono text-brand-400">{std.rollNo || '21BCE1042'}</td>
+                <tr key={std.id} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="py-4 px-6 font-bold text-gray-900">{std.room || 'B-304'}</td>
+                  <td className="py-4 px-6 font-medium text-gray-900">{std.name}</td>
+                  {/* Roll number set to emerald green to match the screenshot */}
+                  <td className="py-4 px-6 font-mono text-emerald-500 font-medium">{std.rollNo || '21BCE1042'}</td>
                   <td className="py-4 px-6">
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={() => handleStatusChange(std.id, 'PRESENT')}
-                        className={`px-3 py-1.5 rounded-xl font-bold transition text-[11px] ${
+                        className={`px-4 py-2 rounded-xl font-bold transition text-xs ${
                           records[std.id] === 'PRESENT'
-                            ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                            : 'bg-gray-800 text-gray-400 hover:text-white'
+                            ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                            : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
                         }`}
                       >
                         ✓ Present
                       </button>
                       <button
                         onClick={() => handleStatusChange(std.id, 'ABSENT')}
-                        className={`px-3 py-1.5 rounded-xl font-bold transition text-[11px] ${
+                        className={`px-4 py-2 rounded-xl font-bold transition text-xs ${
                           records[std.id] === 'ABSENT'
-                            ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                            : 'bg-gray-800 text-gray-400 hover:text-white'
+                            ? 'bg-rose-600 text-white shadow-md shadow-rose-600/20'
+                            : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
                         }`}
                       >
                         ✗ Absent
                       </button>
                       <button
                         onClick={() => handleStatusChange(std.id, 'ON_LEAVE')}
-                        className={`px-3 py-1.5 rounded-xl font-bold transition text-[11px] ${
+                        className={`px-4 py-2 rounded-xl font-bold transition text-xs ${
                           records[std.id] === 'ON_LEAVE'
-                            ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                            : 'bg-gray-800 text-gray-400 hover:text-white'
+                            ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
+                            : 'bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-900'
                         }`}
                       >
                         ✈ On Leave

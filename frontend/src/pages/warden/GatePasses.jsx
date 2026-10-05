@@ -46,9 +46,9 @@ export const WardenGatePasses = () => {
 
   const filteredPasses = passes.filter(p => {
     const matchesFilter = filter === 'ALL' || p.status === filter;
-    const matchesSearch = p.studentName.toLowerCase().includes(search.toLowerCase()) || 
-                          p.rollNo.toLowerCase().includes(search.toLowerCase()) ||
-                          p.destination.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = p.studentName?.toLowerCase().includes(search.toLowerCase()) || 
+                          p.rollNo?.toLowerCase().includes(search.toLowerCase()) ||
+                          p.destination?.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -56,25 +56,27 @@ export const WardenGatePasses = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Gate Pass Approvals & Log</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          {/* Changed header to dark gray */}
+          <h1 className="text-2xl font-bold text-gray-900">Gate Pass Approvals & Log</h1>
+          <p className="text-sm text-gray-500 mt-1">
             Review student outings, verify parent contacts, and trigger real-time WhatsApp gate clearance.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Inputs changed to white background with light borders and dark text */}
           <input
             type="text"
             placeholder="Search passes..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-gray-900 text-white px-3.5 py-2 rounded-xl text-xs border border-gray-700"
+            className="bg-white text-gray-900 px-4 py-2.5 rounded-xl text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           />
 
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="bg-gray-900 text-white px-3 py-2 rounded-xl text-xs border border-gray-700"
+            className="bg-white text-gray-900 px-4 py-2.5 rounded-xl text-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           >
             <option value="ALL">All Statuses</option>
             <option value="PENDING">Pending Only</option>
@@ -87,8 +89,8 @@ export const WardenGatePasses = () => {
       </div>
 
       {actionSuccess && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 shrink-0" />
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 shrink-0" />
           <span>{actionSuccess}</span>
         </div>
       )}
@@ -98,24 +100,27 @@ export const WardenGatePasses = () => {
         {filteredPasses.map((pass) => (
           <div
             key={pass.id}
-            className={`glass-card p-5 rounded-3xl border flex flex-col justify-between space-y-4 ${
-              pass.status === 'PENDING' ? 'border-amber-500/40 bg-gray-900' : 'border-gray-800'
+            /* Cards updated to solid white background with light gray borders */
+            className={`bg-white p-6 rounded-3xl border shadow-sm flex flex-col justify-between space-y-4 ${
+              pass.status === 'PENDING' ? 'border-amber-200 shadow-amber-100' : 'border-gray-200'
             }`}
           >
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono text-gray-400">#{pass.id}</span>
+                <span className="text-xs font-mono text-gray-500">#{pass.id}</span>
+                
+                {/* Badges updated to light mode standard opacities (-50 for bg, -600 for text) */}
                 <span
-                  className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold border ${
+                  className={`px-3 py-1 rounded-full text-[11px] font-bold border ${
                     pass.status === 'APPROVED'
-                      ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                      ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
                       : pass.status === 'CHECKED_OUT'
-                      ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                      ? 'bg-blue-50 text-blue-600 border-blue-200'
                       : pass.status === 'CHECKED_IN'
-                      ? 'bg-gray-800 text-gray-400 border-gray-700'
+                      ? 'bg-gray-100 text-gray-600 border-gray-200'
                       : pass.status === 'REJECTED'
-                      ? 'bg-rose-500/20 text-rose-400 border-rose-500/30'
-                      : 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                      ? 'bg-rose-50 text-rose-600 border-rose-200'
+                      : 'bg-amber-50 text-amber-600 border-amber-200'
                   }`}
                 >
                   {pass.status}
@@ -123,47 +128,50 @@ export const WardenGatePasses = () => {
               </div>
 
               <div>
-                <h3 className="text-base font-bold text-white">{pass.studentName}</h3>
-                <p className="text-xs text-brand-300 font-mono font-medium">{pass.rollNo} • Room {pass.room}</p>
-                <p className="text-xs text-gray-300 mt-1">
-                  <strong>Dest:</strong> {pass.destination}
+                {/* Student name to dark gray, Roll/Room to emerald green */}
+                {pass.studentName && <h3 className="text-lg font-bold text-gray-900">{pass.studentName}</h3>}
+                <p className="text-sm text-emerald-500 font-mono font-medium">{pass.rollNo} • Room {pass.room}</p>
+                
+                <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+                  <strong className="text-gray-900">Dest:</strong> {pass.destination}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  <strong>Reason:</strong> {pass.reason}
+                <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                  <strong className="text-gray-900">Reason:</strong> {pass.reason}
                 </p>
               </div>
 
-              <div className="p-3 rounded-2xl bg-gray-800/40 border border-gray-700/50 text-xs space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Expected In:</span>
-                  <span className="text-emerald-400 font-semibold">
+              {/* Inner info block updated to light gray */}
+              <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 text-sm space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Expected In:</span>
+                  <span className="text-emerald-600 font-bold">
                     {pass.expectedInTime ? new Date(pass.expectedInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Curfew (09:30 PM)'}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Parent Phone:</span>
-                  <span className="text-gray-200 font-mono">{pass.parentPhone}</span>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Parent Phone:</span>
+                  <span className="text-gray-900 font-mono font-medium">{pass.parentPhone}</span>
                 </div>
               </div>
             </div>
 
             {pass.status === 'PENDING' ? (
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-800">
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                 <button
                   onClick={() => handleAction(pass.id, 'REJECTED')}
-                  className="flex-1 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold text-xs border border-rose-500/30 transition"
+                  className="flex-1 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm border border-rose-200 transition"
                 >
                   Reject
                 </button>
                 <button
                   onClick={() => handleAction(pass.id, 'APPROVED')}
-                  className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md shadow-emerald-600/30 transition"
+                  className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition"
                 >
                   Approve & Alert
                 </button>
               </div>
             ) : (
-              <div className="text-[11px] text-gray-500 pt-2 border-t border-gray-800 text-center">
+              <div className="text-xs text-gray-400 pt-4 border-t border-gray-100 text-center font-medium">
                 Action handled by {pass.approvedBy || 'Warden Office'}
               </div>
             )}
