@@ -2,11 +2,11 @@
 
 ![HostelSync](https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=1200&auto=format&fit=crop&q=80)
 
-HostelSync is a next-generation, full-stack hostel operations suite featuring **4 distinct role portals** (Student, Warden, Admin, Security/Staff), **Gemini AI-powered maintenance auto-triage**, **Digital QR Gate Passes with HTML5 camera scanning**, **WhatsApp Cloud API alerts**, **Night Roll Call Attendance**, and **Executive BI Analytics**.
+"HostelSync is a full-stack web application built to solve daily hostel management problems. It replaces manual paper-based out-passes and messy complaint registers with a clean digital system for students, wardens, and admins."
 
 ---
 
-## 🚀 Key Architecture & Portals
+   Key Architecture & Portals
 
 ```
                          HOSTELSYNC
@@ -28,50 +28,45 @@ HostelSync is a next-generation, full-stack hostel operations suite featuring **
 ```
 
 ### 1. 🎓 Student Portal
-- **Dashboard**: Live curfew countdown, active pass status, today's 4-course mess menu, recent complaint status timeline.
-- **Dynamic QR Gate Pass**: Apply for local/weekend passes with 1-click animated QR generation and curfew tracker.
-- **Leave Application**: Multi-day leave requests with parent consent tracking.
-- **AI-Powered Complaints**: Submit issues with Gemini AI automatic urgency scoring, technician assignment & ETA.
-- **Mess Dining**: View weekly 4-course menu, rate meals with stars & reviews, meal skip rebate estimator.
-- **My Room & Roommates**: View room allocation, roommate cards, bed numbers, and inventory checklist.
-- **Hostel Notice Board**: Category and urgency filtered campus bulletins.
-- **Digital Smart ID Card**: Verified hostel resident digital ID card with QR code.
+- **Dashboard**: Shows today's mess menu, active gate passes, and a curfew timer so students know exactly when they need to be back.
+- **QR Gate Pass**: Students can apply for an outing pass. If approved by the warden, the app generates a secure QR code to show at the main gate.
+- **Leave Requests**: A simple form to apply for multi-day leaves (going home for holidays).
+- **Smart Complaints**: Students can log maintenance issues (like a broken fan or plumbing issue). I integrated the Gemini API here to automatically read the complaint and label it as 'Urgent' or 'Normal'.
+- **Mess Menu & Feedback**: Check what's for breakfast/lunch/dinner and leave a quick star rating for the food quality.
+- **Room Info & Digital ID**: Shows roommate details, bed allocation, and acts as a digital hostel ID card.
+- **Notice Board**: A digital pinboard for hostel announcements.
 
 ### 2. 👨‍🏫 Warden Portal
-- **Dashboard**: Overview cards, quick approval queue, and night roll call shortcuts.
-- **Student Directory**: Search & filter by block, floor, room, branch, emergency contact quick-dial.
-- **Gate Pass Approvals**: 1-click approve/reject with instant parent WhatsApp alert dispatch.
-- **Leave Requests**: Sanction outstation leave slips.
-- **Complaints & SLA**: Review Gemini AI urgency recommendations, assign electricians/plumbers.
-- **Night Roll Call Attendance**: Room-by-room night roll call checklist with instant absentee alert generator.
-- **Notices & WhatsApp Broadcast**: Post circulars with automatic WhatsApp broadcast to student and parent groups.
-- **Reports & Export**: Gate pass statistics, maintenance turnaround times, and CSV data export.
+- **Dashboard**: Quick stats showing how many students are currently outside the campus and a list of pending pass requests.
+- **Student Directory**: A searchable list of all students with their branch, room number, and parents' emergency contact numbers.
+- **Pass Approvals**: Wardens can accept or reject student outings with one click. (Includes a feature to trigger WhatsApp alerts to parents).
+- **Issue Tracking**: Wardens see all student complaints sorted by the AI's urgency score and can assign them to the campus electrician or plumber.
+- **Night Attendance**: A simple room-by-room digital checklist for the night roll call.
+- **Broadcast Notices**: Wardens can type an announcement here, and it instantly shows up on the student notice board.
 
 ### 3. ⚙️ Admin Portal
-- **Executive BI Dashboard**: Campus occupancy %, peak traffic hours, mess satisfaction score.
-- **User Management**: Add/edit/manage Students, Wardens, Guards, and Staff with RBAC.
-- **Hostel Blocks**: Manage building capacities, floors, and assigned wardens.
-- **Room Allocation Matrix**: Interactive room occupancy grid with bed assignments.
-- **Mess & Catering Manager**: Edit weekly meals (Breakfast, Lunch, Snacks, Dinner) and pricing.
-- **Master Complaint SLA Tracker**: Track pending resolution times and staff performance.
-- **System Settings**: WhatsApp templates, Gemini AI prompt tuning, hostel curfew times, academic year config.
+- **Admin Overview**: High-level view of hostel occupancy, overall mess ratings, and total unresolved complaints.
+- **Manage Users**: Create and manage accounts for students, wardens, and guards. This handles all the Role-Based Access Control (RBAC).
+- **Hostel Blocks & Rooms**: Define total rooms, block names, and use a visual grid to assign students to specific beds.
+- **Mess Manager**: A simple interface to update the weekly food menu.
+- **Settings**: Change global application variables like the default hostel curfew time and the Gemini AI prompt instructions.
 
 ### 4. 🛡️ Security & Staff Portal
-- **Live QR Gate Pass Scanner**: Web camera QR scanner to scan student gate passes at the gate + 1-click demo test buttons.
-- **Gate In/Out Check**: Real-time validation with automated parent WhatsApp alert dispatch.
-- **Security In/Out Log**: Real-time feed of all student movements with search & timestamp filters.
-- **Staff Maintenance Work Orders**: Assigned plumbing, electrical, carpentry tasks with "Mark as Fixed".
+- **Camera QR Scanner**: A built-in HTML5 web camera scanner. Security guards just scan the student's phone at the gate to verify if their pass is valid.
+- **In/Out Logging**: Automatically logs the exact timestamp when a student leaves or enters the campus.
+- **Movement History**: A searchable feed for guards to quickly check who is currently outside.
+- **Staff Tasks**: Maintenance staff (plumbers, electricians) get a simple screen showing their assigned tasks with a "Mark as Fixed" button.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Built With (Tech Stack)
 
-- **Frontend**: React 18, Vite, Tailwind CSS, Lucide React, Recharts, HTML5-QRCode Scanner, QRCode.React, Canvas Confetti.
-- **Backend**: Node.js, Express, JWT Authentication, Role-Based Access Control (RBAC), Mongoose / In-Memory Mock Store Fallback.
-- **Integrations**:
-  - **Gemini AI API**: Smart Complaint Triage & 24/7 Virtual Hostel Concierge Chatbot (`SyncBot AI`).
-  - **WhatsApp Cloud API**: Parent Entry/Exit alerts & broadcast simulator.
-  - **QR Code Engine**: High-density QR generation & real-time camera decoding.
+- **Frontend**: React.js (Vite), Tailwind CSS for styling, Recharts for dashboard graphs, and Lucide React for icons. Used `html5-qrcode` for the web camera scanner.
+- **Backend**: Node.js and Express.js. Implemented secure login and Role-Based Access Control (RBAC) using JWT. Database handled via MongoDB (Mongoose).
+- **External Integrations**:
+  - **Gemini API**: Used to automatically read student maintenance complaints, figure out the urgency, and power a simple helper chatbot for students.
+  - **WhatsApp API**: Connected to send automated text messages to parents when a student leaves or enters the campus gate.
+  - **QR Code Handling**: Used `qrcode.react` to generate the passes on the student app, which are then scanned by the security guard's tablet/phone camera.
 
 ---
 
