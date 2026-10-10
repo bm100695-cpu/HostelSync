@@ -4,14 +4,11 @@ import {
   Bell, 
   Sparkles, 
   LogOut, 
-  User, 
-  Shield, 
-  KeyRound, 
   Menu,
   ChevronDown,
   CheckCircle2,
   AlertTriangle,
-  QrCode
+  Shield
 } from 'lucide-react';
 
 export const Navbar = ({ toggleSidebar, openAIChat }) => {
@@ -19,145 +16,132 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
 
-  const roleColors = {
-    student: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    warden: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    admin: 'bg-purple-50 text-purple-700 border-purple-200',
-    staff: 'bg-amber-50 text-amber-700 border-amber-200',
-  };
-
   const handleRoleSwitch = async (role) => {
     setShowRoleDropdown(false);
     await quickLogin(role);
   };
 
   return (
-    <header className="h-16 bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 px-4 md:px-6 flex items-center justify-between shadow-sm">
-      {/* Left section: Hamburger & Breadcrumb */}
+    <header className="h-16 bg-white border-b border-gray-300 sticky top-0 z-30 px-4 flex items-center justify-between">
+      
+      {/* Left section: Hamburger & Logo */}
       <div className="flex items-center gap-4">
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition lg:hidden"
+          className="p-2 text-gray-600 hover:bg-gray-100 rounded lg:hidden"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center shadow-md shadow-brand-500/20">
-            <span className="font-bold text-white text-base tracking-wider">HS</span>
+          <div className="w-8 h-8 bg-blue-600 flex items-center justify-center text-white font-bold rounded">
+            HS
           </div>
           <div className="hidden sm:block">
-            <span className="font-extrabold text-lg tracking-tight text-slate-900">
-              HOSTEL<span className="text-brand-600">SYNC</span>
-            </span>
-            <span className="text-[10px] text-slate-400 block tracking-widest uppercase font-semibold">
-              Smart Campus Living
-            </span>
+            <h1 className="font-bold text-xl text-gray-800 m-0">
+              HostelSync
+            </h1>
           </div>
         </div>
       </div>
 
-      {/* Right section: AI Button, Role Switcher, Notifications, User */}
-      <div className="flex items-center gap-2 sm:gap-4">
-        {/* Gemini AI Trigger Button */}
+      {/* Right section */}
+      <div className="flex items-center gap-3 sm:gap-4 text-sm">
+        
+        {/* AI Trigger Button */}
         <button
           onClick={openAIChat}
-          className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 via-purple-50 to-emerald-50 hover:from-indigo-100 hover:to-emerald-100 text-brand-700 text-xs font-semibold border border-brand-200 transition shadow-sm"
+          className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 rounded font-medium"
         >
-          <Sparkles className="w-3.5 h-3.5 text-brand-600 animate-pulse" />
+          <Sparkles className="w-4 h-4" />
           <span className="hidden md:inline">Ask SyncBot AI</span>
           <span className="md:hidden">AI</span>
         </button>
 
-        {/* Demo Role Switcher Dropdown */}
+        {/* Role Switcher Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition ${roleColors[user?.role] || roleColors.student}`}
+            className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-300 text-gray-800 rounded font-medium hover:bg-gray-200"
           >
-            <Shield className="w-3.5 h-3.5" />
-            <span className="capitalize">{user?.role === 'staff' ? 'Security / Staff' : user?.role}</span>
-            <ChevronDown className="w-3 h-3 ml-0.5 opacity-70" />
+            <Shield className="w-4 h-4 text-gray-600" />
+            <span className="capitalize">{user?.role === 'staff' ? 'Security' : user?.role}</span>
+            <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
 
           {showRoleDropdown && (
-            <div className="absolute right-0 mt-2 w-56 glass-dropdown rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+            <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-300 rounded shadow-md py-1 z-50">
+              <div className="px-3 py-2 text-xs font-bold text-gray-500 border-b border-gray-200 uppercase">
                 Switch Demo Persona
               </div>
               {[
-                { role: 'student', label: 'Student Portal (Aarav)', desc: 'Passes, Leave, Mess, AI Complaints' },
-                { role: 'warden', label: 'Warden Portal (Dr. Ramesh)', desc: 'Approvals, Roll-Call, Reports' },
-                { role: 'admin', label: 'Admin Portal (Dean)', desc: 'Rooms, Users, Analytics, Mess' },
-                { role: 'staff', label: 'Security & Staff (Vikram)', desc: 'Live QR Scanner, Gate In/Out' },
+                { role: 'student', label: 'Student (Aarav)' },
+                { role: 'warden', label: 'Warden (Dr. Ramesh)' },
+                { role: 'admin', label: 'Admin (Dean)' },
+                { role: 'staff', label: 'Security (Vikram)' },
               ].map((item) => (
                 <button
                   key={item.role}
                   onClick={() => handleRoleSwitch(item.role)}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-slate-50 flex flex-col transition ${user?.role === item.role ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-slate-700'}`}
+                  className={`w-full text-left px-3 py-2 flex items-center justify-between hover:bg-gray-100 ${
+                    user?.role === item.role ? 'bg-blue-50 font-bold text-blue-700' : 'text-gray-700'
+                  }`}
                 >
-                  <span className="font-medium flex items-center justify-between">
-                    {item.label}
-                    {user?.role === item.role && <CheckCircle2 className="w-3.5 h-3.5 text-brand-600" />}
-                  </span>
-                  <span className="text-[10px] text-slate-400">{item.desc}</span>
+                  <span>{item.label}</span>
+                  {user?.role === item.role && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Notifications Bell */}
+        {/* Notifications */}
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition relative"
+            className="p-2 text-gray-600 hover:bg-gray-100 rounded relative"
           >
             <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-500 rounded-full ring-2 ring-white"></span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 glass-dropdown rounded-2xl shadow-xl p-3.5 z-50">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                <span className="text-xs font-bold text-slate-900">Live Hostel Broadcasts</span>
-                <span className="text-[10px] text-brand-600 font-semibold">WhatsApp Synced</span>
+            <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-300 rounded shadow-md p-3 z-50">
+              <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
+                <span className="font-bold">Notifications</span>
+                <span className="text-xs text-blue-600">WhatsApp Synced</span>
               </div>
-              <div className="mt-2 space-y-2 text-xs">
-                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
-                  <p className="font-semibold text-slate-800">Gate Pass #GP-2026-901 Approved</p>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Parent WhatsApp SMS delivered successfully.</p>
+              <div className="space-y-2">
+                <div className="p-2 bg-gray-50 border border-gray-200 rounded">
+                  <p className="font-semibold">Gate Pass #GP-901 Approved</p>
+                  <p className="text-xs text-gray-600 mt-1">Parent WhatsApp SMS delivered.</p>
                 </div>
-                <div className="p-2.5 rounded-xl bg-amber-50/60 border border-amber-200/80">
-                  <p className="font-semibold text-amber-800 flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Scheduled Water Maintenance
+                <div className="p-2 bg-yellow-50 border border-yellow-200 rounded">
+                  <p className="font-semibold text-yellow-800 flex items-center gap-1">
+                    <AlertTriangle className="w-4 h-4" /> Water Maintenance
                   </p>
-                  <p className="text-[11px] text-amber-700/80 mt-0.5">Block A & B water supply sanitized 10 AM - 1 PM.</p>
+                  <p className="text-xs text-yellow-700 mt-1">Block A & B (10 AM - 1 PM).</p>
                 </div>
               </div>
             </div>
           )}
         </div>
 
-        {/* User Avatar & Logout */}
-        <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
+        {/* User Profile Info */}
+        <div className="flex items-center gap-2 pl-3 border-l border-gray-300">
           <img
-  src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=F3F4F6&color=374151`}
-  alt={user?.name || 'Profile'}
-  onError={(e) => { 
-    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=F3F4F6&color=374151`; 
-    e.target.onerror = null; 
-  }}
-  className="w-8 h-8 rounded-full object-cover flex-shrink-0 bg-gray-100 ring-2 ring-gray-200" 
-/>
-          <div className="hidden xl:block text-left">
-            <p className="text-xs font-bold text-slate-800 truncate max-w-[120px]">{user?.name}</p>
-            <p className="text-[10px] text-slate-400">{user?.room || user?.block || 'Campus'}</p>
+            src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=E5E7EB&color=374151`}
+            alt="Profile"
+            className="w-8 h-8 rounded border border-gray-300 object-cover" 
+          />
+          <div className="hidden xl:block">
+            <p className="font-bold text-gray-800 leading-none">{user?.name || 'User'}</p>
+            <p className="text-xs text-gray-500 mt-1">{user?.room || 'Campus'}</p>
           </div>
           <button
             onClick={logout}
+            className="p-1.5 ml-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
             title="Logout"
-            className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition"
           >
             <LogOut className="w-4 h-4" />
           </button>

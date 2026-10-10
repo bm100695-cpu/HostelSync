@@ -19,9 +19,7 @@ import {
   Activity,
   Wrench,
   Building2,
-  Sliders,
-  Sparkles,
-  ShieldCheck
+  Sliders
 } from 'lucide-react';
 
 export const Sidebar = ({ isOpen, closeSidebar }) => {
@@ -46,24 +44,24 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
       { to: '/warden/leaves', icon: CalendarCheck, label: 'Leave Requests' },
       { to: '/warden/complaints', icon: AlertCircle, label: 'Complaints & SLA' },
       { to: '/warden/attendance', icon: ClipboardList, label: 'Night Roll Call' },
-      { to: '/warden/notices', icon: MessageSquareShare, label: 'Notices & WhatsApp' },
+      { to: '/warden/notices', icon: MessageSquareShare, label: 'Notices' },
       { to: '/warden/reports', icon: BarChart3, label: 'Reports & Export' },
     ],
     admin: [
-      { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Executive BI' },
+      { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
       { to: '/admin/users', icon: Users, label: 'User Management' },
       { to: '/admin/hostels', icon: Building2, label: 'Hostel Blocks' },
       { to: '/admin/rooms', icon: Bed, label: 'Room Allocation' },
       { to: '/admin/mess', icon: UtensilsCrossed, label: 'Mess & Menus' },
-      { to: '/admin/complaints', icon: AlertCircle, label: 'Master Complaints' },
+      { to: '/admin/complaints', icon: AlertCircle, label: 'Complaints' },
       { to: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
-      { to: '/admin/settings', icon: Sliders, label: 'Settings & WhatsApp' },
+      { to: '/admin/settings', icon: Sliders, label: 'Settings' },
     ],
     staff: [
-      { to: '/staff/scanner', icon: ScanLine, label: 'QR Gate Scanner' },
+      { to: '/staff/scanner', icon: ScanLine, label: 'QR Scanner' },
       { to: '/staff/logs', icon: Activity, label: 'Movement Logs' },
-      { to: '/staff/work-orders', icon: Wrench, label: 'Maintenance Tasks' },
-      { to: '/staff/notices', icon: Bell, label: 'Campus Bulletins' },
+      { to: '/staff/work-orders', icon: Wrench, label: 'Maintenance' },
+      { to: '/staff/notices', icon: Bell, label: 'Notices' },
     ],
   };
 
@@ -75,57 +73,47 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
       {isOpen && (
         <div
           onClick={closeSidebar}
-          className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-gray-900/50 z-40 lg:hidden"
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-slate-200 z-50 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-gray-300 z-50 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Sidebar Brand Header */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-md shadow-brand-500/20">
-              HS
-            </div>
-            <span className="font-bold text-lg text-slate-900 tracking-tight">HostelSync</span>
+        {/* Sidebar Header */}
+        <div className="h-16 flex items-center gap-3 px-4 border-b border-gray-300 bg-gray-50">
+          <div className="w-8 h-8 bg-blue-600 flex items-center justify-center font-bold text-white rounded">
+            HS
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200 font-bold uppercase tracking-widest">
-            v2.0
-          </span>
+          <span className="font-bold text-lg text-gray-900">HostelSync</span>
         </div>
 
         {/* Current User Snapshot */}
-        <div className="p-3.5 mx-3 my-3 rounded-2xl bg-slate-50 border border-slate-200/80">
-          <div className="flex items-center gap-3">
-           <img
-  src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=F3F4F6&color=374151`}
-  alt={user?.name || 'Profile'}
-  onError={(e) => { 
-    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=F3F4F6&color=374151`; 
-    e.target.onerror = null; 
-  }}
-  className="w-10 h-10 rounded-full object-cover flex-shrink-0 bg-gray-100 ring-2 ring-gray-200" 
-/>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-slate-900 truncate">{user?.name}</p>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
-                <span className="text-[10px] text-slate-500 capitalize font-medium">
-                  {user?.role === 'staff' ? 'Gate Security' : user?.role}
-                </span>
-              </div>
-            </div>
+        <div className="p-3 mx-4 my-4 bg-gray-50 border border-gray-300 flex items-center gap-3">
+          <img
+            src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=E5E7EB&color=374151`}
+            alt={user?.name || 'Profile'}
+            onError={(e) => { 
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=E5E7EB&color=374151`; 
+              e.target.onerror = null; 
+            }}
+            className="w-10 h-10 rounded border border-gray-300 object-cover bg-white" 
+          />
+          <div className="overflow-hidden">
+            <p className="text-sm font-bold text-gray-900 truncate">{user?.name || 'User'}</p>
+            <p className="text-xs text-gray-600 capitalize">
+              {user?.role === 'staff' ? 'Gate Security' : user?.role}
+            </p>
           </div>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-          <div className="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-            Main Navigation
+        <nav className="flex-1 py-2 overflow-y-auto">
+          <div className="px-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
+            Navigation
           </div>
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -135,10 +123,10 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
                 to={item.to}
                 onClick={closeSidebar}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition duration-150 ${
+                  `flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-brand-50 text-brand-700 border-l-4 border-brand-600 font-bold shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      ? 'bg-gray-100 text-green-700 border-l-4 border-green-600'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`
                 }
               >
@@ -148,19 +136,7 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
             );
           })}
         </nav>
-
-        {/* Security / System Footer Pill */}
-        <div className="p-4 border-t border-slate-200">
-          <div className="flex items-center gap-2.5 p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <div className="truncate">
-              <p className="text-slate-900 font-semibold text-[11px]">System Status: Online</p>
-              <p className="text-[10px] text-slate-500">Gemini & WhatsApp Ready</p>
-            </div>
-          </div>
-        </div>
       </aside>
     </>
   );
 };
-
