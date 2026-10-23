@@ -4,7 +4,15 @@ import { QRModal } from '../../components/common/QRModal';
 import { 
   QrCode, 
   Plus, 
-  Clock 
+  Clock,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  MapPin,
+  Calendar,
+  X,
+  FileText,
+  Filter
 } from 'lucide-react';
 
 export const StudentGatePass = () => {
@@ -12,6 +20,7 @@ export const StudentGatePass = () => {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [selectedPass, setSelectedPass] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [filterTab, setFilterTab] = useState('ALL');
   
   const [formData, setFormData] = useState({
     type: 'Local Outing',
@@ -24,7 +33,7 @@ export const StudentGatePass = () => {
   const fetchPasses = async () => {
     try {
       const res = await api.getPasses();
-      if (res.success) setPasses(res.data);
+      if (res.success) setPasses(res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -57,106 +66,208 @@ export const StudentGatePass = () => {
     }
   };
 
-  const getStatusStyles = (status) => {
-    switch (status) {
-      case 'APPROVED':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'CHECKED_OUT':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'CHECKED_IN':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-    }
-  };
+  const filteredPasses = passes.filter(pass => {
+    if (filterTab === 'ACTIVE') return pass.status === 'APPROVED' || pass.status === 'CHECKED_OUT';
+    if (filterTab === 'PENDING') return pass.status === 'PENDING';
+    if (filterTab === 'COMPLETED') return pass.status === 'CHECKED_IN' || pass.status === 'REJECTED';
+    return true;
+  });
+
+  const activeCount = passes.filter(p => p.status === 'APPROVED' || p.status === 'CHECKED_OUT').length;
+  const pendingCount = passes.filter(p => p.status === 'PENDING').length;
+  const completedCount = passes.filter(p => p.status === 'CHECKED_IN' || p.status === 'REJECTED').length;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="w-full space-y-6">
+      
+      {/* Header Banner */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gate Passes</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Apply for hostel outing passes and manage active requests.
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-xs font-bold text-[#00897B] bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200/60">
+              Campus Movement Pass
+            </span>
+            <span className="text-xs text-slate-400">·</span>
+            <span className="text-xs font-semibold text-slate-500">
+              Biometric & QR Verified
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Gate Passes
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Apply for hostel outing passes, check live warden approval, and show your gate entry QR pass.
           </p>
         </div>
 
         <button
           onClick={() => setShowApplyModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition flex items-center gap-2"
+          className="bg-[#00897B] hover:bg-[#00796B] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-sm hover:shadow transition flex items-center gap-2 shrink-0 w-full sm:w-auto justify-center"
         >
           <Plus className="w-4 h-4" />
-          New Pass Request
+          <span>New Pass Request</span>
         </button>
       </div>
 
-      {/* Pass Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {passes.map((pass) => {
+      {/* Filter Tabs & Quick Metrics Bar */}
+      <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-2xs">
+        <button
+          onClick={() => setFilterTab('ALL')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'ALL'
+              ? 'bg-slate-900 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>All Passes</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'ALL' ? 'bg-slate-700 text-white' : 'bg-slate-100 text-slate-600'}`}>
+            {passes.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setFilterTab('ACTIVE')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'ACTIVE'
+              ? 'bg-[#00897B] text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>Active & Approved</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'ACTIVE' ? 'bg-[#00796B] text-white' : 'bg-teal-50 text-[#00897B]'}`}>
+            {activeCount}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setFilterTab('PENDING')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'PENDING'
+              ? 'bg-amber-600 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>Pending</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'PENDING' ? 'bg-amber-700 text-white' : 'bg-amber-50 text-amber-700'}`}>
+            {pendingCount}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setFilterTab('COMPLETED')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'COMPLETED'
+              ? 'bg-slate-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>Past / Checked-In</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'COMPLETED' ? 'bg-slate-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
+            {completedCount}
+          </span>
+        </button>
+      </div>
+
+      {/* Pass Cards Grid (fills the whole page naturally) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+        {filteredPasses.map((pass) => {
           const isApproved = pass.status === 'APPROVED' || pass.status === 'CHECKED_OUT';
+          const isPending = pass.status === 'PENDING';
+          const isCheckedIn = pass.status === 'CHECKED_IN';
           
           return (
             <div
               key={pass.id}
-              className={`bg-white p-4 rounded border ${
-                isApproved ? 'border-green-300' : 'border-gray-200'
-              } shadow-sm flex flex-col justify-between`}
+              className={`bg-white rounded-3xl p-6 border transition-all flex flex-col justify-between shadow-xs hover:shadow-md ${
+                isApproved 
+                  ? 'border-teal-200/90 ring-1 ring-teal-100/80 bg-gradient-to-b from-teal-50/20 to-white' 
+                  : isPending
+                  ? 'border-amber-200/90 ring-1 ring-amber-100/80 bg-gradient-to-b from-amber-50/20 to-white'
+                  : 'border-slate-200'
+              }`}
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-gray-500">#{pass.id}</span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium border ${getStatusStyles(pass.status)}`}>
+              <div className="space-y-4">
+                {/* Card Top: Pass ID & Status Badge */}
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                    #{pass.id}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                    isApproved
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : isPending
+                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                      : isCheckedIn
+                      ? 'bg-slate-100 text-slate-600 border-slate-200'
+                      : 'bg-rose-50 text-rose-700 border-rose-200'
+                  }`}>
                     {pass.status}
                   </span>
                 </div>
 
+                {/* Details */}
                 <div>
-                  <h3 className="text-sm font-bold text-gray-900">{pass.type}</h3>
-                  <p className="text-xs text-gray-700 font-medium mt-0.5">{pass.destination}</p>
-                  <p className="text-xs text-gray-500 mt-1 line-clamp-2">{pass.reason}</p>
-                </div>
-
-                <div className="p-3 rounded bg-gray-50 border border-gray-200 text-xs space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Out Time:</span>
-                    <span className="text-gray-900 font-medium">
-                      {pass.outTime ? new Date(pass.outTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'ASAP'}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-[#00897B] uppercase tracking-wider">
+                      {pass.type}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Expected Return:</span>
-                    <span className="text-gray-900 font-medium">
-                      {pass.expectedInTime ? new Date(pass.expectedInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'By Curfew'}
-                    </span>
-                  </div>
-                </div>
-
-                {pass.wardenRemark && (
-                  <p className="text-xs text-gray-700 italic bg-gray-100 p-2 rounded border border-gray-200">
-                    Warden: "{pass.wardenRemark}"
+                  <h3 className="text-base font-extrabold text-slate-900 mt-0.5 flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                    <span>{pass.destination}</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
+                    {pass.reason}
                   </p>
+                </div>
+
+                {/* Timings Box */}
+                <div className="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-100 text-xs space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" /> Out Time:
+                    </span>
+                    <span className="text-slate-800 font-bold">
+                      {pass.outTime ? new Date(pass.outTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Immediate / ASAP'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-500 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" /> Expected Return:
+                    </span>
+                    <span className="text-slate-800 font-bold">
+                      {pass.expectedInTime ? new Date(pass.expectedInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Before Curfew'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Warden Remark */}
+                {pass.wardenRemark && (
+                  <div className="text-xs bg-teal-50/60 p-3 rounded-2xl border border-teal-100 text-slate-700 leading-relaxed">
+                    <span className="font-bold text-[#00897B]">Warden Note: </span>
+                    <span>"{pass.wardenRemark}"</span>
+                  </div>
                 )}
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              {/* Action Button */}
+              <div className="mt-5 pt-4 border-t border-slate-100">
                 {isApproved ? (
                   <button
                     onClick={() => setSelectedPass(pass)}
-                    className="w-full py-2 rounded bg-green-600 hover:bg-green-700 text-white font-medium text-sm transition flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl bg-[#00897B] hover:bg-[#00796B] text-white font-bold text-sm transition shadow-sm hover:shadow flex items-center justify-center gap-2"
                   >
                     <QrCode className="w-4 h-4" />
-                    Open QR Pass
+                    <span>Open QR Pass</span>
                   </button>
-                ) : pass.status === 'PENDING' ? (
-                  <div className="flex items-center justify-center gap-1.5 text-xs text-yellow-600 font-medium py-2">
+                ) : isPending ? (
+                  <div className="flex items-center justify-center gap-2 text-xs text-amber-700 font-bold py-2.5 bg-amber-50 rounded-xl border border-amber-200/60">
                     <Clock className="w-4 h-4" />
-                    Awaiting Approval
+                    <span>Awaiting Warden Approval</span>
                   </div>
                 ) : (
-                  <div className="text-center text-xs text-gray-500 font-medium py-2">
-                    Request Closed
+                  <div className="text-center text-xs text-slate-400 font-semibold py-2.5 bg-slate-50 rounded-xl">
+                    Request Completed & Closed
                   </div>
                 )}
               </div>
@@ -164,104 +275,111 @@ export const StudentGatePass = () => {
           );
         })}
         
-        {passes.length === 0 && (
-          <div className="col-span-full p-8 text-center text-gray-500 bg-white border border-gray-200 rounded">
-            No gate passes found. Click "New Pass Request" to apply.
+        {filteredPasses.length === 0 && (
+          <div className="col-span-full p-12 text-center text-slate-500 bg-white border border-dashed border-slate-300 rounded-3xl">
+            <FileText className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="font-bold text-slate-800 text-base">No Passes Found</h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+              There are no gate passes in this filter view. Click "New Pass Request" to submit an application.
+            </p>
           </div>
         )}
       </div>
 
       {/* Apply Gate Pass Modal */}
       {showApplyModal && (
-        <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-md bg-white rounded border border-gray-300 p-6 shadow-lg">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-2xl">
             
-            <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Apply for Gate Pass</h3>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+              <div>
+                <h3 className="text-xl font-extrabold text-slate-900">Apply for Gate Pass</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Submit outpass request for warden approval</p>
+              </div>
               <button
                 onClick={() => setShowApplyModal(false)}
-                className="text-gray-400 hover:text-red-600 font-bold"
+                className="w-8 h-8 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-700 font-medium mb-1">Pass Type</label>
+                <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Pass Type</label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                 >
-                  <option value="Local Outing">Local Outing (City / Mall)</option>
-                  <option value="Market">Market / Essentials</option>
+                  <option value="Local Outing">Local Outing (City / Mall / Market)</option>
+                  <option value="Market">Market / Stationery / Essentials</option>
                   <option value="Weekend Outing">Weekend Outing (Day Trip)</option>
-                  <option value="Medical Emergency">Medical Emergency</option>
-                  <option value="Academic Project">Academic Event</option>
-                  <option value="Other">Other</option>
+                  <option value="Medical Emergency">Medical Clinic / Pharmacy</option>
+                  <option value="Academic Project">Academic Library / Project Meet</option>
+                  <option value="Other">Other Personal Work</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm text-gray-700 font-medium mb-1">Specific Destination</label>
+                <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Destination</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g., Central Library, City Mall"
+                  placeholder="e.g., Central Library, City Mall, Apollo Clinic"
                   value={formData.destination}
                   onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-gray-700 font-medium mb-1">Reason for Visit</label>
+                <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Reason for Visit</label>
                 <textarea
                   required
                   rows={2}
-                  placeholder="Briefly state the reason..."
+                  placeholder="State the purpose of your visit briefly..."
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-700 font-medium mb-1">Out Time</label>
+                  <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Out Time</label>
                   <input
                     type="time"
                     required
                     value={formData.outTime}
                     onChange={(e) => setFormData({ ...formData, outTime: e.target.value })}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-700 font-medium mb-1">Expected Return</label>
+                  <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Expected Return</label>
                   <input
                     type="time"
                     required
                     value={formData.expectedInTime}
                     onChange={(e) => setFormData({ ...formData, expectedInTime: e.target.value })}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 flex gap-3">
+              <div className="pt-3 flex gap-3">
                 <button
                   type="button"
                   onClick={() => setShowApplyModal(false)}
-                  className="flex-1 py-2 rounded bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium border border-gray-300 transition"
+                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition disabled:opacity-50"
+                  className="flex-1 py-3 rounded-xl bg-[#00897B] hover:bg-[#00796B] text-white text-sm font-bold shadow-sm transition disabled:opacity-50"
                 >
                   {submitting ? 'Submitting...' : 'Submit Application'}
                 </button>

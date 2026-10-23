@@ -19,7 +19,8 @@ import {
   Activity,
   Wrench,
   Building2,
-  Sliders
+  Sliders,
+  Shield
 } from 'lucide-react';
 
 export const Sidebar = ({ isOpen, closeSidebar }) => {
@@ -73,46 +74,46 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
       {isOpen && (
         <div
           onClick={closeSidebar}
-          className="fixed inset-0 bg-gray-900/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 lg:hidden"
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-gray-300 z-50 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-slate-200 z-50 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Sidebar Header */}
-        <div className="h-16 flex items-center gap-3 px-4 border-b border-gray-300 bg-gray-50">
-          <div className="w-8 h-8 bg-blue-600 flex items-center justify-center font-bold text-white rounded">
-            HS
+        <div className="h-16 flex items-center gap-2.5 px-5 border-b border-slate-200 bg-white">
+          <div className="w-8 h-8 rounded-xl bg-[#00897B] flex items-center justify-center text-white shadow-xs">
+            <Shield className="w-4 h-4 stroke-[2.2]" />
           </div>
-          <span className="font-bold text-lg text-gray-900">HostelSync</span>
+          <span className="font-extrabold text-lg text-slate-900 tracking-tight">HostelSync</span>
         </div>
 
-        {/* Current User Snapshot */}
-        <div className="p-3 mx-4 my-4 bg-gray-50 border border-gray-300 flex items-center gap-3">
+        {/* Current User Snapshot Card */}
+        <div className="p-3 mx-4 my-4 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center gap-3">
           <img
-            src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=E5E7EB&color=374151`}
+            src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=00897B&color=ffffff`}
             alt={user?.name || 'Profile'}
             onError={(e) => { 
-              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=E5E7EB&color=374151`; 
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'Student')}&background=00897B&color=ffffff`; 
               e.target.onerror = null; 
             }}
-            className="w-10 h-10 rounded border border-gray-300 object-cover bg-white" 
+            className="w-10 h-10 rounded-xl border border-slate-200 object-cover bg-white shadow-xs" 
           />
           <div className="overflow-hidden">
-            <p className="text-sm font-bold text-gray-900 truncate">{user?.name || 'User'}</p>
-            <p className="text-xs text-gray-600 capitalize">
+            <p className="text-sm font-bold text-slate-900 truncate">{user?.name || 'User'}</p>
+            <p className="text-xs text-slate-500 capitalize font-medium">
               {user?.role === 'staff' ? 'Gate Security' : user?.role}
             </p>
           </div>
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 py-2 overflow-y-auto">
-          <div className="px-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
+        <nav className="flex-1 px-3 py-2 overflow-y-auto space-y-1">
+          <div className="px-3 pb-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
             Navigation
           </div>
           {navItems.map((item) => {
@@ -123,10 +124,10 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
                 to={item.to}
                 onClick={closeSidebar}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-colors ${
+                  `flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
                     isActive
-                      ? 'bg-gray-100 text-green-700 border-l-4 border-green-600'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-teal-50 text-[#00897B] shadow-xs'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`
                 }
               >
