@@ -228,27 +228,27 @@ export const Login = () => {
       </div>
 
       {/* Right Panel: Clean White Sign-in Form with generous width and font size */}
-      <div className="w-full lg:w-[42%] xl:w-[40%] flex flex-col justify-center items-center p-6 sm:p-10 lg:p-12 xl:p-16 bg-[#F8FAFC]">
+      <div className="w-full lg:w-[42%] xl:w-[40%] flex flex-col justify-center items-center p-3.5 sm:p-8 lg:p-12 xl:p-16 bg-[#F8FAFC]">
         {/* Mobile Branding (only on smaller screens) */}
-        <div className="lg:hidden flex items-center gap-3 mb-8">
-          <div className="w-11 h-11 rounded-2xl bg-[#00897B] flex items-center justify-center text-white shadow-sm">
+        <div className="lg:hidden flex items-center gap-2.5 mb-5 mt-2">
+          <div className="w-10 h-10 rounded-2xl bg-[#00897B] flex items-center justify-center text-white shadow-sm">
             <Shield className="w-5 h-5 stroke-[2.2]" />
           </div>
-          <span className="text-2xl font-bold tracking-tight text-slate-900">
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
             HostelSync
           </span>
         </div>
 
         {/* Main Sign In Card */}
-        <div className="w-full max-w-[480px] bg-white rounded-3xl p-8 sm:p-10 lg:p-11 border border-slate-200 shadow-xl shadow-slate-200/50">
+        <div className="w-full max-w-[480px] bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 border border-slate-200 shadow-sm sm:shadow-xl sm:shadow-slate-200/50">
           
           {/* Header Title */}
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900">
             Sign in to your hostel account
           </h1>
 
-          {/* Role Navigation Tabs */}
-          <div className="flex border-b border-slate-200 mt-6 gap-6 sm:gap-8">
+          {/* Role Navigation Tabs - perfectly balanced for mobile and desktop */}
+          <div className="flex justify-between border-b border-slate-200 mt-5 w-full">
             {Object.keys(roleConfigs).map((key) => {
               const role = roleConfigs[key];
               const isActive = activeTab === key;
@@ -257,7 +257,7 @@ export const Login = () => {
                   key={key}
                   type="button"
                   onClick={() => handleTabChange(key)}
-                  className={`pb-3 text-sm sm:text-base font-semibold transition-all relative outline-none ${
+                  className={`pb-2.5 sm:pb-3 px-1 text-[13px] sm:text-base font-semibold transition-all relative outline-none ${
                     isActive
                       ? 'text-slate-900 font-bold'
                       : 'text-slate-500 hover:text-slate-800'
@@ -273,7 +273,7 @@ export const Login = () => {
           </div>
 
           {/* Role Description Subtitle */}
-          <p className="text-slate-600 text-sm sm:text-[15px] mt-4 mb-6 leading-relaxed min-h-[44px]">
+          <p className="text-slate-500 text-xs sm:text-sm mt-3.5 mb-5 leading-relaxed min-h-[38px]">
             {currentConfig.subtitle}
           </p>
 
@@ -289,7 +289,7 @@ export const Login = () => {
           <form onSubmit={handleManualLogin} className="space-y-5">
             {/* College Email Field */}
             <div>
-              <label className="block text-slate-900 font-bold text-sm mb-2">
+              <label className="block text-slate-900 font-bold text-xs sm:text-sm mb-1.5">
                 College email
               </label>
               <input
@@ -298,20 +298,20 @@ export const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@college.edu"
                 required
-                className="w-full bg-white text-slate-900 border border-slate-300 rounded-xl px-4 py-3.5 text-base placeholder-slate-400 focus:outline-none focus:border-[#00897B] focus:ring-2 focus:ring-[#00897B]/20 transition-all"
+                className="w-full bg-white text-slate-900 border border-slate-300 rounded-xl px-3.5 py-3 sm:py-3.5 text-sm sm:text-base placeholder-slate-400 focus:outline-none focus:border-[#00897B] focus:ring-2 focus:ring-[#00897B]/20 transition-all"
               />
             </div>
 
             {/* Password Field */}
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="text-slate-900 font-bold text-sm">
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="text-slate-900 font-bold text-xs sm:text-sm">
                   Password
                 </label>
                 <button
                   type="button"
                   onClick={() => setShowForgotModal(true)}
-                  className="text-sm font-semibold text-[#00897B] hover:underline transition-colors"
+                  className="text-xs sm:text-sm font-semibold text-[#00897B] hover:underline transition-colors"
                 >
                   Forgot password?
                 </button>
@@ -324,12 +324,12 @@ export const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full bg-white text-slate-900 border border-slate-300 rounded-xl pl-4 pr-16 py-3.5 text-base placeholder-slate-400 focus:outline-none focus:border-[#00897B] focus:ring-2 focus:ring-[#00897B]/20 transition-all"
+                  className="w-full bg-white text-slate-900 border border-slate-300 rounded-xl pl-3.5 pr-14 py-3 sm:py-3.5 text-sm sm:text-base placeholder-slate-400 focus:outline-none focus:border-[#00897B] focus:ring-2 focus:ring-[#00897B]/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors select-none"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors select-none"
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
@@ -340,7 +340,7 @@ export const Login = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-4 px-5 rounded-xl bg-[#00897B] hover:bg-[#00796B] text-white font-bold text-base transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2"
+              className="w-full py-3.5 sm:py-4 px-4 rounded-xl bg-[#00897B] hover:bg-[#00796B] text-white font-bold text-sm sm:text-base transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.99] disabled:opacity-60 flex items-center justify-center gap-2"
             >
               {submitting ? (
                 <>
@@ -355,7 +355,7 @@ export const Login = () => {
             {/* Secondary Action Button */}
             <Link
               to="/student-registration"
-              className="w-full block text-center py-3.5 px-5 rounded-xl border border-slate-800 text-slate-900 hover:bg-slate-50 font-bold text-base transition-all duration-200"
+              className="w-full block text-center py-3 sm:py-3.5 px-4 rounded-xl border border-slate-800 text-slate-900 hover:bg-slate-50 font-bold text-sm sm:text-base transition-all duration-200"
             >
               Create an account
             </Link>

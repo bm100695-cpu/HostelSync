@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../services/api';
-import { Plus, MapPin, X } from 'lucide-react';
+import { 
+  Plus, 
+  MapPin, 
+  X, 
+  Calendar, 
+  Clock, 
+  ShieldCheck, 
+  Phone, 
+  FileText,
+  AlertCircle
+} from 'lucide-react';
 
 export const StudentLeave = () => {
   const [leaves, setLeaves] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [filterTab, setFilterTab] = useState('ALL');
 
   const [formData, setFormData] = useState({
     fromDate: '',
@@ -18,7 +29,7 @@ export const StudentLeave = () => {
   const fetchLeaves = async () => {
     try {
       const res = await api.getLeaves();
-      if (res.success) setLeaves(res.data);
+      if (res.success) setLeaves(res.data || []);
     } catch (err) {
       console.error(err);
     }
@@ -45,168 +56,308 @@ export const StudentLeave = () => {
     }
   };
 
-  const getStatusStyles = (status) => {
-    switch (status) {
-      case 'APPROVED':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'REJECTED':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-    }
-  };
+  const filteredLeaves = leaves.filter(leave => {
+    if (filterTab === 'APPROVED') return leave.status === 'APPROVED';
+    if (filterTab === 'PENDING') return leave.status === 'PENDING';
+    if (filterTab === 'REJECTED') return leave.status === 'REJECTED';
+    return true;
+  });
+
+  const approvedCount = leaves.filter(l => l.status === 'APPROVED').length;
+  const pendingCount = leaves.filter(l => l.status === 'PENDING').length;
+  const rejectedCount = leaves.filter(l => l.status === 'REJECTED').length;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="w-full space-y-6">
+      
+      {/* Header Banner */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Leave Applications</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Apply for semester breaks, festival leaves, or home visits.
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-xs font-bold text-[#00897B] bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200/60">
+              Extended Leave
+            </span>
+            <span className="text-xs text-slate-400">·</span>
+            <span className="text-xs font-semibold text-slate-500">
+              Warden & Parent SMS Sync
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Leave Applications
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Apply for semester breaks, festival holidays, or emergency home visits.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition flex items-center gap-2"
+          className="bg-[#00897B] hover:bg-[#00796B] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-sm hover:shadow transition flex items-center gap-2 shrink-0 w-full sm:w-auto justify-center"
         >
           <Plus className="w-4 h-4" />
-          Apply for Leave
+          <span>Apply for Leave</span>
+        </button>
+      </div>
+
+      {/* Filter Tabs Bar */}
+      <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-2xs">
+        <button
+          onClick={() => setFilterTab('ALL')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'ALL'
+              ? 'bg-slate-900 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>All Applications</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'ALL' ? 'bg-slate-700 text-white' : 'bg-slate-100 text-slate-600'}`}>
+            {leaves.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setFilterTab('APPROVED')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'APPROVED'
+              ? 'bg-[#00897B] text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>Approved</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'APPROVED' ? 'bg-[#00796B] text-white' : 'bg-teal-50 text-[#00897B]'}`}>
+            {approvedCount}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setFilterTab('PENDING')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'PENDING'
+              ? 'bg-amber-600 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>Pending</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'PENDING' ? 'bg-amber-700 text-white' : 'bg-amber-50 text-amber-700'}`}>
+            {pendingCount}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setFilterTab('REJECTED')}
+          className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+            filterTab === 'REJECTED'
+              ? 'bg-rose-700 text-white shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          <span>Rejected</span>
+          <span className={`px-2 py-0.5 rounded-full text-[11px] ${filterTab === 'REJECTED' ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700'}`}>
+            {rejectedCount}
+          </span>
         </button>
       </div>
 
       {/* Leave Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {leaves.map((leave) => (
-          <div key={leave.id} className="bg-white p-4 rounded border border-gray-200 shadow-sm flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-gray-500">#{leave.id}</span>
-                <span className={`px-2 py-1 rounded text-xs font-medium border ${getStatusStyles(leave.status)}`}>
-                  {leave.status}
-                </span>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+        {filteredLeaves.map((leave) => {
+          const isApproved = leave.status === 'APPROVED';
+          const isPending = leave.status === 'PENDING';
+          
+          return (
+            <div
+              key={leave.id}
+              className={`bg-white rounded-3xl p-6 border transition-all flex flex-col justify-between shadow-xs hover:shadow-md ${
+                isApproved
+                  ? 'border-teal-200/90 ring-1 ring-teal-100/80 bg-gradient-to-b from-teal-50/20 to-white'
+                  : isPending
+                  ? 'border-amber-200/90 ring-1 ring-amber-100/80 bg-gradient-to-b from-amber-50/20 to-white'
+                  : 'border-slate-200'
+              }`}
+            >
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                  <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                    #{leave.id}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                    isApproved
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : isPending
+                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                      : 'bg-rose-50 text-rose-700 border-rose-200'
+                  }`}>
+                    {leave.status}
+                  </span>
+                </div>
+
+                {/* Destination & Reason */}
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-[#00897B] shrink-0" />
+                    <span>{leave.destination}</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
+                    {leave.reason}
+                  </p>
+                </div>
+
+                {/* Dates & Duration Box */}
+                <div className="grid grid-cols-2 gap-3 p-3.5 rounded-2xl bg-slate-50/90 border border-slate-100 text-xs">
+                  <div>
+                    <span className="text-slate-400 font-semibold block mb-1">Leave Window</span>
+                    <span className="text-slate-800 font-bold leading-tight block">
+                      {leave.fromDate} <br />
+                      <span className="text-slate-500 font-normal">to</span> {leave.toDate}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 font-semibold block mb-1">Total Duration</span>
+                    <span className="text-[#00897B] font-extrabold text-base block mt-0.5">
+                      {leave.totalDays} Days
+                    </span>
+                  </div>
+                </div>
+
+                {/* Emergency Contact */}
+                {leave.emergencyContact && (
+                  <div className="flex items-center gap-2 text-xs text-slate-500 px-1">
+                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Emergency: <strong>{leave.emergencyContact}</strong></span>
+                  </div>
+                )}
+
+                {/* Warden Remarks */}
+                {leave.wardenRemarks && (
+                  <div className="text-xs bg-teal-50/60 p-3 rounded-2xl border border-teal-100 text-slate-700 leading-relaxed">
+                    <span className="font-bold text-[#00897B]">Warden Note: </span>
+                    <span>"{leave.wardenRemarks}"</span>
+                  </div>
+                )}
               </div>
 
-              <div className="text-sm font-bold text-gray-900 flex items-start gap-1.5">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                <span>{leave.destination}</span>
+              {/* Status Note Footer */}
+              <div className="mt-5 pt-4 border-t border-slate-100 text-center">
+                {isApproved ? (
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-emerald-700 font-bold py-2 bg-emerald-50 rounded-xl">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Approved · Parent SMS Notified</span>
+                  </div>
+                ) : isPending ? (
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-amber-700 font-bold py-2 bg-amber-50 rounded-xl">
+                    <Clock className="w-4 h-4" />
+                    <span>Review Pending with Warden</span>
+                  </div>
+                ) : (
+                  <div className="text-xs text-slate-400 font-semibold py-2 bg-slate-50 rounded-xl">
+                    Leave Application Rejected
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-gray-600 mt-2 pl-5">{leave.reason}</p>
             </div>
+          );
+        })}
 
-            <div className="grid grid-cols-2 gap-3 p-3 rounded bg-gray-50 border border-gray-200 text-xs">
-              <div>
-                <span className="text-gray-500 block mb-1">Dates</span>
-                <span className="text-gray-900 font-medium">{leave.fromDate} <br/> {leave.toDate}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">Duration</span>
-                <span className="text-gray-900 font-bold">{leave.totalDays} Days</span>
-              </div>
-            </div>
-
-            {leave.wardenRemarks && (
-              <div className="p-2 rounded bg-gray-100 border border-gray-200 text-xs text-gray-700 italic">
-                <span className="font-semibold not-italic">Warden:</span> "{leave.wardenRemarks}"
-              </div>
-            )}
-          </div>
-        ))}
-        
-        {leaves.length === 0 && (
-          <div className="col-span-full p-8 text-center text-gray-500 bg-white border border-gray-200 rounded">
-            No leave records found. Click "Apply for Leave" to create one.
+        {filteredLeaves.length === 0 && (
+          <div className="col-span-full p-12 text-center text-slate-500 bg-white border border-dashed border-slate-300 rounded-3xl">
+            <FileText className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="font-bold text-slate-800 text-base">No Leave Records Found</h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+              There are no leave requests under this filter. Click "Apply for Leave" to create a new application.
+            </p>
           </div>
         )}
       </div>
 
       {/* Apply Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-900/50 flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-md bg-white rounded border border-gray-300 p-6 shadow-lg">
-            
-            <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
-              <h3 className="text-lg font-bold text-gray-900">Apply for Leave</h3>
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+              <div>
+                <h3 className="text-xl font-extrabold text-slate-900">Apply for Leave</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Formal hostel leave approval request</p>
+              </div>
               <button 
                 onClick={() => setShowModal(false)} 
-                className="text-gray-400 hover:text-red-600 font-bold"
+                className="w-8 h-8 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-700 font-medium mb-1">From Date</label>
+                  <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">From Date</label>
                   <input
                     type="date"
                     required
                     value={formData.fromDate}
                     onChange={(e) => setFormData({ ...formData, fromDate: e.target.value })}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-700 font-medium mb-1">To Date</label>
+                  <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">To Date</label>
                   <input
                     type="date"
                     required
                     value={formData.toDate}
                     onChange={(e) => setFormData({ ...formData, toDate: e.target.value })}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-gray-700 font-medium mb-1">Destination Address</label>
+                <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Destination Address</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Home (Jaipur)"
+                  placeholder="e.g. Home (Flat 402, Green Park, Jaipur)"
                   value={formData.destination}
                   onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-gray-700 font-medium mb-1">Reason for Leave</label>
+                <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Reason for Leave</label>
                 <textarea
                   required
                   rows={2}
-                  placeholder="Enter reason..."
+                  placeholder="e.g. Attending sister's wedding / Diwali festival break"
                   value={formData.reason}
                   onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-gray-700 font-medium mb-1">Emergency Contact</label>
+                <label className="block text-xs sm:text-sm text-slate-800 font-bold mb-1.5">Emergency Parent Phone</label>
                 <input
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={formData.emergencyContact}
                   onChange={(e) => setFormData({ ...formData, emergencyContact: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#00897B] focus:ring-1 focus:ring-[#00897B]"
                 />
               </div>
 
-              <div className="pt-2 flex gap-3">
+              <div className="pt-3 flex gap-3">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-2 rounded bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium border border-gray-300 transition"
+                  className="flex-1 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition disabled:opacity-50"
+                  className="flex-1 py-3 rounded-xl bg-[#00897B] hover:bg-[#00796B] text-white text-sm font-bold shadow-sm transition disabled:opacity-50"
                 >
                   {submitting ? 'Submitting...' : 'Submit Request'}
                 </button>
