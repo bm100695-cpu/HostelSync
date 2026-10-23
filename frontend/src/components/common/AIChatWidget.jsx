@@ -77,10 +77,10 @@ export const AIChatWidget = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 w-80 sm:w-96 h-[500px] bg-white rounded border border-gray-300 shadow-lg flex flex-col z-50">
+    <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 w-[calc(100vw-24px)] sm:w-96 max-w-sm h-[480px] sm:h-[500px] bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col z-50 overflow-hidden">
       
       {/* Header */}
-      <div className="p-3 bg-gray-100 border-b border-gray-300 flex items-center justify-between">
+      <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 flex items-center justify-center text-white rounded">
             <Sparkles className="w-4 h-4" />

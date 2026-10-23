@@ -88,17 +88,17 @@ export const StudentDashboard = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
           <Link
             to="/student/gate-pass"
-            className="flex-1 sm:flex-none justify-center bg-[#00897B] hover:bg-[#00796B] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-sm hover:shadow transition flex items-center gap-2"
+            className="justify-center bg-[#00897B] hover:bg-[#00796B] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-sm hover:shadow transition flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             <span>Apply Pass</span>
           </Link>
           <Link
             to="/student/complaints"
-            className="flex-1 sm:flex-none justify-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 px-5 py-3 rounded-xl font-bold text-sm transition flex items-center gap-2"
+            className="justify-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 px-5 py-3 rounded-xl font-bold text-sm transition flex items-center gap-2"
           >
             <AlertCircle className="w-4 h-4 text-slate-500" />
             <span>New Complaint</span>

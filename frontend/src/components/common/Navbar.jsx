@@ -22,53 +22,55 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between">
+    <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 px-2.5 sm:px-6 flex items-center justify-between w-full max-w-full">
       
       {/* Left section: Hamburger & Logo */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         <button
           onClick={toggleSidebar}
-          className="p-2 text-slate-600 hover:bg-slate-100 rounded-xl lg:hidden transition"
+          className="p-1.5 sm:p-2 text-slate-600 hover:bg-slate-100 rounded-xl lg:hidden transition"
+          aria-label="Toggle Navigation Menu"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-[#00897B] flex items-center justify-center text-white shadow-xs">
-            <Shield className="w-5 h-5 stroke-[2.2]" />
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#00897B] flex items-center justify-center text-white shadow-xs shrink-0">
+            <Shield className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
           </div>
-          <span className="font-extrabold text-xl text-slate-900 tracking-tight hidden sm:inline-block">
+          <span className="font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight hidden sm:inline-block">
             HostelSync
           </span>
         </div>
       </div>
 
       {/* Right section */}
-      <div className="flex items-center gap-2.5 sm:gap-3 text-sm">
+      <div className="flex items-center gap-1 sm:gap-3 text-sm shrink-0">
         
         {/* AI Trigger Button */}
         <button
           onClick={openAIChat}
-          className="flex items-center gap-2 px-3.5 py-1.5 bg-teal-50 text-[#00897B] border border-teal-200 hover:bg-teal-100 rounded-xl font-semibold transition text-xs sm:text-sm"
+          className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-1.5 bg-teal-50 text-[#00897B] border border-teal-200 hover:bg-teal-100 rounded-xl font-semibold transition text-xs sm:text-sm shrink-0"
+          title="Ask SyncBot AI"
         >
-          <Sparkles className="w-4 h-4 text-[#00897B]" />
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00897B]" />
           <span className="hidden md:inline">Ask SyncBot AI</span>
-          <span className="md:hidden">AI</span>
+          <span className="md:hidden font-bold">AI</span>
         </button>
 
         {/* Role Switcher Dropdown */}
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-            className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl font-semibold hover:bg-slate-100 transition text-xs sm:text-sm"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl font-semibold hover:bg-slate-100 transition text-xs sm:text-sm shrink-0"
           >
-            <Shield className="w-4 h-4 text-[#00897B]" />
-            <span className="capitalize">{user?.role === 'staff' ? 'Security' : user?.role}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <Shield className="w-3.5 h-3.5 text-[#00897B]" />
+            <span className="capitalize max-w-[50px] sm:max-w-none truncate">{user?.role === 'staff' ? 'Security' : user?.role}</span>
+            <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400" />
           </button>
 
           {showRoleDropdown && (
-            <div className="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl py-1.5 z-50 animate-in fade-in duration-150">
+            <div className="absolute right-0 mt-2 w-56 sm:w-60 bg-white border border-slate-200 rounded-2xl shadow-xl py-1.5 z-50 animate-in fade-in duration-150">
               <div className="px-3.5 py-2 text-[11px] font-bold text-slate-400 border-b border-slate-100 uppercase tracking-wider">
                 Switch Demo Persona
               </div>
@@ -94,17 +96,18 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
         </div>
 
         {/* Notifications */}
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 text-slate-600 hover:bg-slate-100 rounded-xl relative transition"
+            className="p-1.5 sm:p-2 text-slate-600 hover:bg-slate-100 rounded-xl relative transition"
+            aria-label="Notifications"
           >
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full"></span>
+            <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="absolute top-1 sm:top-1.5 right-1 sm:right-1.5 w-2 h-2 bg-emerald-500 rounded-full"></span>
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50 animate-in fade-in duration-150">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50 animate-in fade-in duration-150">
               <div className="flex justify-between items-center border-b border-slate-100 pb-2.5 mb-3">
                 <span className="font-bold text-slate-900 text-sm">Notifications</span>
                 <span className="text-[11px] font-semibold text-[#00897B] bg-teal-50 px-2 py-0.5 rounded-full">WhatsApp Synced</span>
@@ -126,11 +129,11 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
         </div>
 
         {/* User Profile Info */}
-        <div className="flex items-center gap-2.5 pl-3 border-l border-slate-200">
+        <div className="flex items-center gap-1 sm:gap-2.5 pl-1.5 sm:pl-3 border-l border-slate-200 shrink-0">
           <img
             src={user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=00897B&color=ffffff`}
             alt="Profile"
-            className="w-8 h-8 rounded-full border border-slate-200 object-cover shadow-xs" 
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-slate-200 object-cover shadow-xs shrink-0" 
           />
           <div className="hidden xl:block">
             <p className="font-bold text-slate-900 leading-none text-xs">{user?.name || 'User'}</p>
@@ -138,7 +141,7 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
           </div>
           <button
             onClick={logout}
-            className="p-1.5 ml-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+            className="p-1 sm:p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition shrink-0"
             title="Logout"
           >
             <LogOut className="w-4 h-4" />
