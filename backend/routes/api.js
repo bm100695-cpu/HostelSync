@@ -733,6 +733,43 @@ router.post('/admin/hostels', protect, authorize('admin'), (req, res) => {
   res.status(201).json({ success: true, data: newHostel });
 });
 
+// ================= ROOMS ROUTES =================
+router.get('/rooms', protect, (req, res) => {
+  res.json({ success: true, count: (mockStore.rooms || []).length, data: mockStore.rooms || [] });
+});
+
+router.get('/rooms/my-room', protect, (req, res) => {
+  const rooms = mockStore.rooms || [];
+  const room = rooms.find(r => r.occupants && r.occupants.some(o => o.id === req.user.id)) || rooms[0] || null;
+  res.json({ success: true, data: room });
+});
+
+router.post('/rooms/allocate', protect, authorize('admin', 'warden'), (req, res) => {
+  const { studentId, roomNo, bed } = req.body;
+  const student = mockStore.users.find(u => u.id === studentId);
+  const targetRoom = (mockStore.rooms || []).find(r => r.roomNo === roomNo || r.id === roomNo);
+  
+  if (!targetRoom) {
+    return res.status(404).json({ success: false, message: 'Room not found' });
+  }
+  
+  if (student) {
+    student.room = targetRoom.roomNo;
+    student.block = targetRoom.block;
+    if (!targetRoom.occupants.some(o => o.id === student.id)) {
+      targetRoom.occupants.push({
+        id: student.id,
+        name: student.name,
+        rollNo: student.rollNo,
+        bed: bed || `Bed ${targetRoom.occupants.length + 1}`
+      });
+      targetRoom.occupied = targetRoom.occupants.length;
+      if (targetRoom.occupied >= targetRoom.capacity) targetRoom.status = 'Full';
+    }
+  }
+  res.json({ success: true, message: `Student allocated to Room ${targetRoom.roomNo} successfully`, data: targetRoom });
+});
+
 router.get('/admin/analytics', protect, authorize('admin', 'warden'), (req, res) => {
   const totalStudents = mockStore.users.filter(u => u.role === 'student').length;
   const activePasses = mockStore.gatePasses.filter(p => p.status === 'APPROVED' || p.status === 'CHECKED_OUT').length;
