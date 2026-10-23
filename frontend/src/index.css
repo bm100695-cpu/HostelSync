@@ -48,7 +48,7 @@ input[type="time"],
 input[type="datetime-local"],
 select,
 textarea {
-  background-color: #c9e8a4;
+  background-color: #FFFFFF;
   color: #0F172A;
   border-color: #E2E8F0;
 }
@@ -59,6 +59,15 @@ textarea:focus {
   background-color: #FFFFFF;
   border-color: #16A34A;
   outline: none;
+}
+
+/* Fix browser autofill pale blue color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 40px #FFFFFF inset !important;
+  -webkit-text-fill-color: #0F172A !important;
 }
 
 /* Tables in Light Theme */
