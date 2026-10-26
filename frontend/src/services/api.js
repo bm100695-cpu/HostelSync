@@ -1,10 +1,29 @@
-const getApiBaseUrl = () => {
-  const envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-  const trimmed = envUrl.trim().replace(/\/+$/, '');
-  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
-};
+const PROD_BACKEND_URL = 'https://hostelsync-1-r9q5.onrender.com/api';
 
-const API_BASE = getApiBaseUrl();
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+
+  // Runtime browser check: If loaded in browser on a production domain (not localhost)
+  if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+    const isLocal = ['localhost', '127.0.0.1', '0.0.0.0', ''].includes(window.location.hostname);
+    if (!isLocal) {
+      if (!envUrl || envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) {
+        return PROD_BACKEND_URL;
+      }
+    }
+  }
+
+  if (envUrl && envUrl.trim()) {
+    const trimmed = envUrl.trim().replace(/\/+$/, '');
+    return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+  }
+
+  if (import.meta.env.PROD) {
+    return PROD_BACKEND_URL;
+  }
+
+  return 'http://localhost:5000/api';
+};
 
 export const api = {
   // Generic fetch wrapper with automatic JWT token attachment
@@ -17,7 +36,7 @@ export const api = {
     };
 
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-    const url = `${API_BASE}${cleanEndpoint}`;
+    const url = `${getApiBaseUrl()}${cleanEndpoint}`;
 
     try {
       const response = await fetch(url, {
