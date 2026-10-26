@@ -5,21 +5,13 @@ import {
   Sparkles, 
   LogOut, 
   Menu,
-  ChevronDown,
-  CheckCircle2,
   AlertTriangle,
   Shield
 } from 'lucide-react';
 
 export const Navbar = ({ toggleSidebar, openAIChat }) => {
-  const { user, logout, quickLogin } = useAuth();
-  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
+  const { user, logout } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
-
-  const handleRoleSwitch = async (role) => {
-    setShowRoleDropdown(false);
-    await quickLogin(role);
-  };
 
   return (
     <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 px-2.5 sm:px-6 flex items-center justify-between w-full max-w-full">
@@ -35,10 +27,12 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#00897B] flex items-center justify-center text-white shadow-xs shrink-0">
-            <Shield className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
-          </div>
-          <span className="font-extrabold text-lg sm:text-xl text-slate-900 tracking-tight hidden sm:inline-block">
+          <img
+            src="/logo-transparent.png"
+            alt="HostelSync Logo"
+            className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0"
+          />
+          <span className="font-extrabold text-lg sm:text-xl tracking-tight hidden sm:inline-block text-[#000000]">
             HostelSync
           </span>
         </div>
@@ -50,49 +44,20 @@ export const Navbar = ({ toggleSidebar, openAIChat }) => {
         {/* AI Trigger Button */}
         <button
           onClick={openAIChat}
-          className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-1.5 bg-teal-50 text-[#00897B] border border-teal-200 hover:bg-teal-100 rounded-xl font-semibold transition text-xs sm:text-sm shrink-0"
+          className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 rounded-xl font-semibold transition text-xs sm:text-sm shrink-0"
           title="Ask SyncBot AI"
         >
-          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00897B]" />
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF9900]" />
           <span className="hidden md:inline">Ask SyncBot AI</span>
           <span className="md:hidden font-bold">AI</span>
         </button>
 
-        {/* Role Switcher Dropdown */}
-        <div className="relative shrink-0">
-          <button
-            onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl font-semibold hover:bg-slate-100 transition text-xs sm:text-sm shrink-0"
-          >
-            <Shield className="w-3.5 h-3.5 text-[#00897B]" />
-            <span className="capitalize max-w-[50px] sm:max-w-none truncate">{user?.role === 'staff' ? 'Security' : user?.role}</span>
-            <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400" />
-          </button>
-
-          {showRoleDropdown && (
-            <div className="absolute right-0 mt-2 w-56 sm:w-60 bg-white border border-slate-200 rounded-2xl shadow-xl py-1.5 z-50 animate-in fade-in duration-150">
-              <div className="px-3.5 py-2 text-[11px] font-bold text-slate-400 border-b border-slate-100 uppercase tracking-wider">
-                Switch Demo Persona
-              </div>
-              {[
-                { role: 'student', label: 'Student (Aarav)' },
-                { role: 'warden', label: 'Warden (Dr. Ramesh)' },
-                { role: 'admin', label: 'Admin (Dean)' },
-                { role: 'staff', label: 'Security (Vikram)' },
-              ].map((item) => (
-                <button
-                  key={item.role}
-                  onClick={() => handleRoleSwitch(item.role)}
-                  className={`w-full text-left px-3.5 py-2 flex items-center justify-between text-xs sm:text-sm hover:bg-slate-50 transition ${
-                    user?.role === item.role ? 'bg-teal-50 font-bold text-[#00897B]' : 'text-slate-700'
-                  }`}
-                >
-                  <span>{item.label}</span>
-                  {user?.role === item.role && <CheckCircle2 className="w-4 h-4 text-[#00897B]" />}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Current Role Badge */}
+        <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl font-semibold text-xs sm:text-sm shrink-0">
+          <Shield className="w-3.5 h-3.5 text-[#FF9900]" />
+          <span className="capitalize max-w-[50px] sm:max-w-none truncate">
+            {user?.role === 'staff' ? 'Security' : user?.role || 'User'}
+          </span>
         </div>
 
         {/* Notifications */}

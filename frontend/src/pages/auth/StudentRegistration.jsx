@@ -120,8 +120,12 @@ export const StudentRegistration = () => {
             <div className="text-center mb-8">
 
               {/* Logo */}
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100 mb-4">
-                <span className="text-2xl">🏠</span>
+              <div className="inline-flex items-center justify-center mb-4">
+                <img
+                  src="/logo-transparent.png"
+                  alt="HostelSync Logo"
+                  className="w-16 h-16 object-contain"
+                />
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
@@ -130,7 +134,7 @@ export const StudentRegistration = () => {
 
               <p className="text-gray-500 mt-2">
                 Create your{' '}
-                <span className="text-emerald-600 font-semibold">
+                <span className="font-bold text-[#000000]">
                   HostelSync
                 </span>{' '}
                 account
@@ -406,7 +410,7 @@ export const StudentRegistration = () => {
 
         {/* Footer */}
         <p className="text-center text-gray-400 text-xs mt-5">
-          © {new Date().getFullYear()} HostelSync. All rights reserved.
+          © {new Date().getFullYear()} <span className="text-[#000000] font-bold">HostelSync</span>. All rights reserved.
         </p>
 
       </div>

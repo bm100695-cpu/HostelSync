@@ -13,9 +13,11 @@ export const StudentIdCard = ({ user }) => {
         {/* Holographic Header */}
         <div className="flex items-center justify-between border-b border-gray-800/80 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-brand-500 flex items-center justify-center font-bold text-xs">
-              HS
-            </div>
+            <img
+              src="/logo-transparent.png"
+              alt="HostelSync Logo"
+              className="w-7 h-7 object-contain"
+            />
             <div>
               <h4 className="text-xs font-black tracking-wider uppercase bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                 HOSTEL DIGITAL PASS

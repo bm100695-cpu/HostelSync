@@ -14,10 +14,15 @@ export const DashboardLayout = () => {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-brand-500 animate-pulse flex items-center justify-center font-bold text-white text-xl shadow-lg shadow-brand-500/20">
-            HS
-          </div>
-          <p className="text-xs text-slate-500 font-medium">Loading HostelSync Workspace...</p>
+          <img
+            src="/logo-transparent.png"
+            alt="HostelSync Logo"
+            className="w-14 h-14 object-contain animate-pulse"
+          />
+          <p className="text-xs font-semibold tracking-wide">
+            <span className="text-[#000000]">HostelSync</span>
+            <span className="text-slate-400 font-normal"> · Loading Workspace...</span>
+          </p>
         </div>
       </div>
     );

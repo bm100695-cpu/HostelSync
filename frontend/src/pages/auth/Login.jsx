@@ -137,10 +137,12 @@ export const Login = () => {
           {/* Top Logo */}
           <div>
             <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-[#00897B] flex items-center justify-center text-white shadow-sm shadow-[#00897B]/20">
-                <Shield className="w-6 h-6 text-white stroke-[2.2]" />
-              </div>
-              <span className="text-2xl xl:text-3xl font-extrabold tracking-tight text-slate-900">
+              <img
+                src="/logo-transparent.png"
+                alt="HostelSync Logo"
+                className="w-12 h-12 object-contain shrink-0"
+              />
+              <span className="text-2xl xl:text-3xl font-extrabold tracking-tight text-[#000000]">
                 HostelSync
               </span>
             </div>
@@ -222,7 +224,7 @@ export const Login = () => {
 
           {/* Bottom Footer */}
           <div className="pt-6 border-t border-slate-200/80 text-sm text-slate-400">
-            HostelSync © 2026
+            <span className="text-[#000000] font-bold">HostelSync</span> © 2026
           </div>
         </div>
       </div>
@@ -231,10 +233,12 @@ export const Login = () => {
       <div className="w-full lg:w-[42%] xl:w-[40%] flex flex-col justify-center items-center p-3.5 sm:p-8 lg:p-12 xl:p-16 bg-[#F8FAFC]">
         {/* Mobile Branding (only on smaller screens) */}
         <div className="lg:hidden flex items-center gap-2.5 mb-5 mt-2">
-          <div className="w-10 h-10 rounded-2xl bg-[#00897B] flex items-center justify-center text-white shadow-sm">
-            <Shield className="w-5 h-5 stroke-[2.2]" />
-          </div>
-          <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+          <img
+            src="/logo-transparent.png"
+            alt="HostelSync Logo"
+            className="w-10 h-10 object-contain shrink-0"
+          />
+          <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#000000]">
             HostelSync
           </span>
         </div>
@@ -377,7 +381,7 @@ export const Login = () => {
 
         {/* Footer info */}
         <p className="mt-8 text-center text-xs sm:text-sm text-slate-400">
-          HostelSync © 2026 · College Hostel Management System
+          <span className="text-[#000000] font-semibold">HostelSync</span> © 2026 · College Hostel Management System
         </p>
       </div>
 
@@ -399,7 +403,7 @@ export const Login = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-slate-900 text-xl">Reset Password</h3>
-                <p className="text-xs text-slate-500">HostelSync Account Recovery</p>
+                <p className="text-xs text-slate-500"><span className="text-[#000000] font-semibold">HostelSync</span> Account Recovery</p>
               </div>
             </div>
 

@@ -86,10 +86,14 @@ export const Sidebar = ({ isOpen, closeSidebar }) => {
       >
         {/* Sidebar Header */}
         <div className="h-16 flex items-center gap-2.5 px-5 border-b border-slate-200 bg-white">
-          <div className="w-8 h-8 rounded-xl bg-[#00897B] flex items-center justify-center text-white shadow-xs">
-            <Shield className="w-4 h-4 stroke-[2.2]" />
-          </div>
-          <span className="font-extrabold text-lg text-slate-900 tracking-tight">HostelSync</span>
+          <img
+            src="/logo-transparent.png"
+            alt="HostelSync Logo"
+            className="w-8 h-8 object-contain shrink-0"
+          />
+          <span className="font-extrabold text-lg tracking-tight text-[#000000]">
+            HostelSync
+          </span>
         </div>
 
         {/* Current User Snapshot Card */}
