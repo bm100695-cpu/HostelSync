@@ -149,13 +149,7 @@ export const Login = () => {
           </div>
 
           {/* Center Content / Highlights */}
-          <div className="space-y-7 my-auto">
-            {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold shadow-xs">
-              <Sparkles className="w-4 h-4 text-slate-600" />
-              <span>Integrated Hostel Operations</span>
-            </div>
-
+          <div className="space-y-6 my-auto">
             {/* Heading & Subtitle */}
             <div className="space-y-3.5">
               <h2 className="text-3xl xl:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.18]">
