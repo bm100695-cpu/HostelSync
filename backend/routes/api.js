@@ -9,7 +9,6 @@ const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 const bcrypt = require('bcryptjs');
-const User = require('../models/User');
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -18,67 +17,6 @@ const mockStore = require('../data/mockDbStore');
 const { protect, authorize, JWT_SECRET } = require('../middleware/auth');
 const { analyzeComplaintWithGemini, askHostelAI } = require('../services/geminiService');
 const { sendWhatsAppNotification } = require('../services/whatsappService');
-
-// ========================================================
-// === 2. YAHAN SE NAYA CLOUDINARY AUR UPLOAD CODE HAI ===
-// ========================================================
-
-// Cloudinary Config (Make sure .env me keys daali hon)
-// ========================================================
-// === 2. YAHAN SE NAYA CLOUDINARY AUR UPLOAD CODE HAI ===
-// ========================================================
-
-// Cloudinary Config
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
-// 👇 Variable ka naam 'storage' se badal kar 'cloudinaryStorage' kar diya
-const cloudinaryStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'hostelsync_profiles',
-    allowedFormats: ['jpeg', 'png', 'jpg'],
-  },
-});
-
-// 👇 Yahan bhi naam 'profileUpload' kar diya
-const profileUpload = multer({ storage: cloudinaryStorage });
-
-// Photo Update API Route (Yahan bhi profileUpload.single lagaya hai)
-router.put('/update-photo/:id', profileUpload.single('profileImage'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: 'Koi file upload nahi hui' });
-    }
-
-    const photoUrl = req.file.path; 
-    console.log("Cloudinary Image URL:", photoUrl);
-
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: req.params.id }, 
-      { profileImage: photoUrl },
-      { new: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: 'Photo Cloudinary par successfully upload ho gayi!',
-      user: updatedUser 
-    });
-
-  } catch (error) {
-    console.error('Cloudinary Upload Error:', error);
-    res.status(500).json({ success: false, message: 'Server error photo upload karte time' });
-  }
-});
-
-// ========================================================
-// === 3. ISKE NEECHE AAPKE BAAKI KE PURANE ROUTES HONGE ===
-// === (Jaise router.post('/auth/login', ...) wagaira)   ===
-// ========================================================
 
 // ================= AUTH ROUTES =================
 
@@ -181,7 +119,37 @@ router.post('/auth/login', async (req, res) => {
       });
     }
 
-    const user = await findUserByEmail(email.trim().toLowerCase());
+    const normalizedEmail = email.trim().toLowerCase();
+    let user = null;
+
+    try {
+      user = await findUserByEmail(normalizedEmail);
+    } catch (dbError) {
+      console.warn('PostgreSQL findUserByEmail lookup error:', dbError.message);
+    }
+
+    // Demo account fallback if user is not yet present in PostgreSQL database
+    if (!user) {
+      const demoUser = mockStore.users.find(
+        u => u.email.toLowerCase() === normalizedEmail
+      );
+      if (demoUser && (password === 'password123' || password === 'demo123')) {
+        const token = jwt.sign(
+          { id: demoUser.id, email: demoUser.email, role: demoUser.role },
+          JWT_SECRET,
+          { expiresIn: '7d' }
+        );
+
+        const { passwordHash, ...userWithoutPass } = demoUser;
+
+        return res.json({
+          success: true,
+          message: 'Login successful',
+          token,
+          user: userWithoutPass
+        });
+      }
+    }
 
     if (!user || !user.passwordHash) {
       return res.status(401).json({

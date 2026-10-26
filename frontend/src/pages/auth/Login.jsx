@@ -100,19 +100,25 @@ export const Login = () => {
     setError('');
     setSubmitting(true);
 
-    try {
-      const targetEmail = email.trim() || currentConfig.demoEmail;
-      const targetPass = password || currentConfig.demoPass;
+    const targetEmail = email.trim() || currentConfig.demoEmail;
+    const targetPass = password || currentConfig.demoPass;
 
+    try {
       const user = await login(targetEmail, targetPass);
       redirectByRole(user.role);
     } catch (err) {
-      try {
-        const user = await quickLogin(currentConfig.id);
-        redirectByRole(user.role);
-      } catch (quickErr) {
-        setError(err.message || 'Login failed. Please verify credentials.');
+      // If user was attempting demo login or demo credentials, quickLogin can act as fallback
+      const isDemoAttempt = targetEmail === currentConfig.demoEmail;
+      if (isDemoAttempt) {
+        try {
+          const user = await quickLogin(currentConfig.id);
+          redirectByRole(user.role);
+          return;
+        } catch (quickErr) {
+          // Fall through to show error
+        }
       }
+      setError(err.message || 'Login failed. Please verify credentials.');
     } finally {
       setSubmitting(false);
     }

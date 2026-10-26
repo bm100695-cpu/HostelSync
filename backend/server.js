@@ -23,6 +23,12 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // API Routes
 app.use('/api', apiRoutes);
 
+// Fallback alias for direct /auth requests (supports requests that omit /api)
+app.use('/auth', (req, res, next) => {
+  req.url = '/auth' + req.url;
+  apiRoutes(req, res, next);
+});
+
 // Health Check
 app.get('/', (req, res) => {
   res.json({

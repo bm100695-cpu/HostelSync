@@ -1,4 +1,10 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getApiBaseUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const trimmed = envUrl.trim().replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+};
+
+const API_BASE = getApiBaseUrl();
 
 export const api = {
   // Generic fetch wrapper with automatic JWT token attachment
@@ -10,18 +16,30 @@ export const api = {
       ...options.headers,
     };
 
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${API_BASE}${cleanEndpoint}`;
+
     try {
-      const response = await fetch(`${API_BASE}${endpoint}`, {
+      const response = await fetch(url, {
         ...options,
         headers,
       });
-      const data = await response.json();
+
+      const contentType = response.headers.get('content-type') || '';
+      let data;
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        data = { message: text || `HTTP ${response.status} ${response.statusText}` };
+      }
+
       if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+        throw new Error(data.message || `Request failed with status ${response.status}`);
       }
       return data;
     } catch (error) {
-      console.error(`API Error on ${endpoint}:`, error.message);
+      console.error(`API Error on ${cleanEndpoint}:`, error.message);
       throw error;
     }
   },
